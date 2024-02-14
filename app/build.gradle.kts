@@ -68,4 +68,7 @@ dependencies {
     debugImplementation("androidx.compose.ui:ui-test-manifest")
 
     implementation("org.ta4j:ta4j-core:0.15")
+
+    implementation("com.squareup.retrofit2:retrofit:2.9.0")
+    implementation("com.squareup.retrofit2:converter-gson:2.9.0")
 }
