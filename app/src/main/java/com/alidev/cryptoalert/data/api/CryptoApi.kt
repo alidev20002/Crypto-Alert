@@ -7,7 +7,7 @@ interface CryptoApi {
     @GET("stats")
     suspend fun getStats(
         @Query("srcCurrency") src: String,
-        @Query("dstCurrency") dst: String = "rls"
+        @Query("dstCurrency") dst: String
     ) : CryptoMarket
 
     @GET("udf/history")
