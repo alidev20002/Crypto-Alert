@@ -21,7 +21,7 @@ data class Crypto(
     val latestPrice: Double = 0.0,
 
     @SerialName("change")
-    val change: Double,
+    val change: Double = 0.0,
 
     @SerialName("icon")
     val icon: Int
