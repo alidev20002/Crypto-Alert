@@ -12,27 +12,32 @@ import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
+import javax.inject.Singleton
 
 @Module
 @InstallIn(SingletonComponent::class)
 interface RepositoryModule {
 
     @Binds
+    @Singleton
     fun bindCryptoMarketRepository(
         repository: CryptoMarketRepositoryDefault
     ): CryptoMarketRepository
 
     @Binds
+    @Singleton
     fun bindCryptoConditionRepository(
         repository: ConditionRepositoryDefault
     ): ConditionRepository
 
     @Binds
+    @Singleton
     fun bindIndicatorRepository(
         repository: IndicatorRepositoryDefault
     ): IndicatorRepository
 
     @Binds
+    @Singleton
     fun bindCryptoCandlesRepository(
         repository: CryptoCandlesRepositoryDefault
     ): CryptoCandlesRepository
