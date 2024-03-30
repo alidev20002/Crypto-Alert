@@ -5,12 +5,14 @@ import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.app.PendingIntent
 import android.app.Service
+import android.content.Context
 import android.content.Intent
 import android.os.Build
 import android.os.IBinder
 import android.util.Log
 import android.widget.Toast
 import androidx.core.app.NotificationCompat
+import androidx.core.content.ContextCompat
 import com.alidev.cryptoalert.MainActivity
 import com.alidev.cryptoalert.R
 import com.alidev.cryptoalert.data.repository.condition.ConditionRepository
@@ -32,8 +34,6 @@ class CryptoAlertService : Service() {
 
     @Inject
     lateinit var conditionRepository: ConditionRepository
-
-    private var isServiceStarted = false
 
     override fun onBind(p0: Intent?): IBinder? {
         return null
@@ -92,7 +92,9 @@ class CryptoAlertService : Service() {
         isServiceStarted = true
 
         val conditions = conditionRepository.readConditionsSync().toMutableList()
-        val sourceCurrencies = conditions.joinToString(separator = ",") { it.crypto.name }
+        val sourceCurrencies = conditions.distinctBy {
+            it.crypto.name
+        }.joinToString(separator = ",") { it.crypto.name }
         val destinationCurrency = "rls"
 
         GlobalScope.launch(Dispatchers.IO) {
@@ -107,6 +109,7 @@ class CryptoAlertService : Service() {
                    price?.let {
                        if (isConditionOk(price.toDouble(), cryptoCondition)) {
                            okConditions.add(cryptoCondition)
+                           Log.i("alitest", "startServiceJob: $cryptoCondition")
                            // create a notification with sound and vibration
                        }
                    }
@@ -155,5 +158,27 @@ class CryptoAlertService : Service() {
 
         const val START = "START"
         const val STOP = "STOP"
+
+        var isServiceStarted = false
+            private set
+
+        fun start(context: Context) {
+            val intent = Intent(context, CryptoAlertService::class.java).also {
+                it.action = START
+            }
+
+            ContextCompat.startForegroundService(context, intent)
+        }
+
+        fun stop(context: Context) {
+            if (!isServiceStarted)
+                return
+
+            val intent = Intent(context, CryptoAlertService::class.java).apply {
+                action = STOP
+            }
+
+            context.startService(intent)
+        }
     }
 }
