@@ -6,6 +6,8 @@ import com.alidev.cryptoalert.data.datasource.candle.IndicatorDataSource
 import com.alidev.cryptoalert.data.datasource.candle.IndicatorDataSourceDefault
 import com.alidev.cryptoalert.data.datasource.condition.ConditionDataSource
 import com.alidev.cryptoalert.data.datasource.condition.ConditionDataSourceDefault
+import com.alidev.cryptoalert.data.datasource.dstcurrency.DstCurrencyDataSource
+import com.alidev.cryptoalert.data.datasource.dstcurrency.DstCurrencyDataSourceDefault
 import com.alidev.cryptoalert.data.datasource.stats.CryptoMarketDataSource
 import com.alidev.cryptoalert.data.datasource.stats.CryptoMarketDataSourceDefault
 import dagger.Binds
@@ -29,6 +31,12 @@ interface DataSourceModule {
     fun bindCryptoConditionDataSource(
         dataSource: ConditionDataSourceDefault
     ): ConditionDataSource
+
+    @Binds
+    @Singleton
+    fun bindDstCurrencyDataSource(
+        dataSource: DstCurrencyDataSourceDefault
+    ): DstCurrencyDataSource
 
     @Binds
     @Singleton
