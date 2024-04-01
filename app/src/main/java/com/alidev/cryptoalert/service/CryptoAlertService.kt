@@ -102,28 +102,33 @@ class CryptoAlertService : Service() {
 
         serviceJob = GlobalScope.launch(Dispatchers.IO) {
             while (isServiceStarted) {
-                val market = cryptoMarketRepository.getStats(sourceCurrencies, destinationCurrency)
-                val stats = market.cryptoStats
+                try {
+                    val market = cryptoMarketRepository.getStats(sourceCurrencies, destinationCurrency)
+                    val stats = market.cryptoStats
 
-                val okConditions = mutableListOf<CryptoCondition>()
+                    val okConditions = mutableListOf<CryptoCondition>()
 
-                conditions.forEach { cryptoCondition ->
-                   val price = stats["${cryptoCondition.crypto.name}-$destinationCurrency"]?.latest
-                   price?.let {
-                       if (isConditionOk(price.toDouble(), cryptoCondition)) {
-                           okConditions.add(cryptoCondition)
-                           // create a notification with sound and vibration
-                       }
-                   }
-                }
+                    conditions.forEach { cryptoCondition ->
+                        val price = stats["${cryptoCondition.crypto.name}-$destinationCurrency"]?.latest
+                        price?.let {
+                            if (isConditionOk(price.toDouble(), cryptoCondition)) {
+                                okConditions.add(cryptoCondition)
+                                // create a notification with sound and vibration
+                            }
+                        }
+                    }
 
-                conditions.removeAll(okConditions)
+                    conditions.removeAll(okConditions)
 
-                conditionRepository.writeConditionsSync(conditions)
+                    conditionRepository.writeConditionsSync(conditions)
 
-                if (conditions.isEmpty()) {
-                    stopServiceJob()
-                    return@launch
+                    if (conditions.isEmpty()) {
+                        stopServiceJob()
+                        return@launch
+                    }
+
+                }catch (e: Exception) {
+                    Log.i("alitest", "startServiceJob: ${e.message}")
                 }
 
                 delay(DELAY_BETWEEN_REQUEST_MILLIS)
