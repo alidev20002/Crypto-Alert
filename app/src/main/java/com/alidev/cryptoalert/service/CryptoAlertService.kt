@@ -7,6 +7,9 @@ import android.app.PendingIntent
 import android.app.Service
 import android.content.Context
 import android.content.Intent
+import android.media.Ringtone
+import android.media.RingtoneManager
+import android.net.Uri
 import android.os.Build
 import android.os.IBinder
 import android.util.Log
@@ -36,7 +39,13 @@ class CryptoAlertService : Service() {
     @Inject
     lateinit var conditionRepository: ConditionRepository
 
+    private lateinit var notificationManager: NotificationManager
+
+    private lateinit var ringtone: Ringtone
+
     private var serviceJob: Job? = null
+
+    private var cryptoNotificationId = 10001
 
     override fun onBind(p0: Intent?): IBinder? {
         return null
@@ -45,32 +54,56 @@ class CryptoAlertService : Service() {
     override fun onCreate() {
         super.onCreate()
 
-        val notification = createNotification()
+        notificationManager = getSystemService(NOTIFICATION_SERVICE) as NotificationManager
+
+        createNotificationChannel()
+
+        val notification = createNotification(
+            title = "Crypto Alert",
+            message = "Price Checking...",
+            smallIcon = R.drawable.ic_launcher_foreground,
+            isOngoing = true
+        )
+
+        ringtone = prepareRingtone()
 
         startForeground(NOTIFICATION_ID, notification)
     }
 
-    private fun createNotification(): Notification {
+    private fun createNotificationChannel() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             val channel = NotificationChannel(
                 "crypto_stats_channel",
                 "Crypto Alert Notification",
                 NotificationManager.IMPORTANCE_HIGH
             )
-            val notificationManager = getSystemService(NOTIFICATION_SERVICE) as NotificationManager
             notificationManager.createNotificationChannel(channel)
         }
+    }
+
+    private fun createNotification(
+        title: String,
+        message: String,
+        smallIcon: Int,
+        isOngoing: Boolean
+    ): Notification {
 
         val pendingIntent: PendingIntent =
             Intent(this, MainActivity::class.java).let { notificationIntent ->
-                PendingIntent.getActivity(this, 0, notificationIntent, PendingIntent.FLAG_IMMUTABLE)
+                PendingIntent.getActivity(
+                    this,
+                    0,
+                    notificationIntent,
+                    PendingIntent.FLAG_IMMUTABLE
+                )
             }
 
         return NotificationCompat.Builder(this, "crypto_stats_channel")
-            .setSmallIcon(R.drawable.ic_launcher_foreground)
-            .setContentTitle("Crypto Alert")
-            .setContentText("Price Checking...")
+            .setSmallIcon(smallIcon)
+            .setContentTitle(title)
+            .setContentText(message)
             .setContentIntent(pendingIntent)
+            .setOngoing(isOngoing)
             .build()
     }
 
@@ -114,6 +147,18 @@ class CryptoAlertService : Service() {
                             if (isConditionOk(price.toDouble(), cryptoCondition)) {
                                 okConditions.add(cryptoCondition)
                                 // create a notification with sound and vibration
+                                val notification = createNotification(
+                                    title = "Crypto Alert",
+                                    message = "${cryptoCondition.crypto.name} is reached to $price",
+                                    smallIcon = R.drawable.ic_launcher_foreground,
+                                    isOngoing = false
+                                )
+
+                                notificationManager.notify(cryptoNotificationId, notification)
+                                cryptoNotificationId += 1
+
+                                if (!ringtone.isPlaying)
+                                    ringtone.play()
                             }
                         }
                     }
@@ -151,12 +196,26 @@ class CryptoAlertService : Service() {
     private fun stopServiceJob() {
         try {
             serviceJob?.cancel()
+            if (ringtone.isPlaying)
+                ringtone.stop()
             stopSelf()
         }catch (e: Exception) {
             Log.i("alitest", "stopServiceJob: ${e.message}")
             Toast.makeText(this, "Service stopped without being started", Toast.LENGTH_SHORT).show()
         }
         isServiceStarted = false
+    }
+
+    private fun prepareRingtone(): Ringtone {
+        val ringtoneUri = getAlarmRingtoneUri()
+        return RingtoneManager.getRingtone(this, ringtoneUri)
+    }
+
+    private fun getAlarmRingtoneUri(): Uri {
+        return RingtoneManager.getActualDefaultRingtoneUri(
+            this,
+            RingtoneManager.TYPE_ALARM
+        ) ?: Uri.parse("android.resource://$packageName/${R.raw.kaptainpolka}")
     }
 
     companion object {
