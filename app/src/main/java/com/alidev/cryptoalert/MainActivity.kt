@@ -172,8 +172,13 @@ class MainActivity : ComponentActivity() {
                                             containerColor = if(isRial) Color.Cyan else Color.Red
                                         ),
                                         onClick = {
-                                            viewModel.saveDstCurrency("usdt")
-                                            viewModel.syncCryptoStats("usdt")
+                                            if (conditions.isEmpty()) {
+                                                viewModel.saveDstCurrency("usdt")
+                                                viewModel.syncCryptoStats("usdt")
+                                            }else {
+                                                Toast.makeText(this@MainActivity, "Please remove conditions first!", Toast.LENGTH_SHORT).show()
+                                            }
+
                                         }
                                     ) {
                                         Text(text = "USDT")
@@ -184,8 +189,12 @@ class MainActivity : ComponentActivity() {
                                             containerColor = if(!isRial) Color.Cyan else Color.Red
                                         ),
                                         onClick = {
-                                            viewModel.saveDstCurrency("rls")
-                                            viewModel.syncCryptoStats("rls")
+                                            if (conditions.isEmpty()) {
+                                                viewModel.saveDstCurrency("rls")
+                                                viewModel.syncCryptoStats("rls")
+                                            }else {
+                                                Toast.makeText(this@MainActivity, "Please remove conditions first!", Toast.LENGTH_SHORT).show()
+                                            }
                                         }
                                     ) {
                                         Text(text = "RLS")
