@@ -5,6 +5,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.alidev.cryptoalert.data.api.CryptoMarket
 import com.alidev.cryptoalert.data.repository.condition.ConditionRepository
+import com.alidev.cryptoalert.data.repository.dstcurrency.DstCurrencyRepository
 import com.alidev.cryptoalert.data.repository.stats.CryptoMarketRepository
 import com.alidev.cryptoalert.ui.model.CryptoCondition
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -19,7 +20,8 @@ import javax.inject.Inject
 @HiltViewModel
 class CryptoMarketViewModel @Inject constructor(
     private val conditionRepository: ConditionRepository,
-    private val cryptoMarketRepository: CryptoMarketRepository
+    private val cryptoMarketRepository: CryptoMarketRepository,
+    private val dstCurrencyRepository: DstCurrencyRepository
 ) : ViewModel() {
 
     private val cryptoConditionsAsFlow = conditionRepository.readConditions()
@@ -28,11 +30,15 @@ class CryptoMarketViewModel @Inject constructor(
 
     private var cryptoConditions = mutableListOf<CryptoCondition>()
 
+    private val dstCurrencyAsFlow = dstCurrencyRepository.readDstCurrency()
+
     val state: StateFlow<MarketState> = combine(
         cryptoConditionsAsFlow,
-        cryptoStateAsFlow
+        cryptoStateAsFlow,
+        dstCurrencyAsFlow
     ) { conditions,
-        stats ->
+        stats,
+        dstCurrency ->
 
         Log.i("alitest", "combine: update flow")
 
@@ -40,7 +46,8 @@ class CryptoMarketViewModel @Inject constructor(
 
         CryptoMarketState(
             conditions,
-            stats
+            stats,
+            dstCurrency
         )
     }.stateIn(
         viewModelScope,
@@ -49,14 +56,14 @@ class CryptoMarketViewModel @Inject constructor(
     )
 
     init {
-
-        syncCryptoStats()
+        val dstCurrency = dstCurrencyRepository.readDstCurrencySync()
+        syncCryptoStats(dstCurrency)
     }
 
-    fun syncCryptoStats() {
+    fun syncCryptoStats(dstCurrency: String = "rls") {
         viewModelScope.launch {
             val cryptoMarket = try {
-                cryptoMarketRepository.getStats(SRC_CURRENCIES, "rls")
+                cryptoMarketRepository.getStats(SRC_CURRENCIES, dstCurrency)
             }catch (e: Exception) {
                 CryptoMarket(emptyMap())
             }
@@ -75,6 +82,12 @@ class CryptoMarketViewModel @Inject constructor(
         viewModelScope.launch {
             cryptoConditions.remove(condition)
             conditionRepository.writeConditions(cryptoConditions.toList())
+        }
+    }
+
+    fun saveDstCurrency(dstCurrency: String) {
+        viewModelScope.launch {
+            dstCurrencyRepository.writeDstCurrency(dstCurrency)
         }
     }
 

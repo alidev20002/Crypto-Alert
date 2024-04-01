@@ -7,7 +7,8 @@ interface MarketState
 
 data class CryptoMarketState(
     val cryptoConditions: List<CryptoCondition>,
-    val cryptoMarket: CryptoMarket
+    val cryptoMarket: CryptoMarket,
+    val dstCurrency: String
 ) : MarketState
 
 object EmptyMarketState : MarketState
