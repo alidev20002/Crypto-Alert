@@ -1,6 +1,7 @@
 package com.alidev.cryptoalert
 
 import android.os.Bundle
+import android.util.Log
 import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -36,6 +37,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
+import com.alidev.cryptoalert.data.api.toCryptoList
 import com.alidev.cryptoalert.service.CryptoAlertService
 import com.alidev.cryptoalert.ui.model.Condition
 import com.alidev.cryptoalert.ui.model.Crypto
@@ -131,7 +133,7 @@ class MainActivity : ComponentActivity() {
                                                 painter = painterResource(id = it.crypto.icon),
                                                 contentDescription = null
                                             )
-                                            Text(text = it.crypto.name)
+                                            Text(text = it.crypto.shortName)
                                             Text(text = "${it.expectedPrice}")
                                             Text(text = it.condition.name)
                                         }
@@ -144,7 +146,8 @@ class MainActivity : ComponentActivity() {
                                             viewModel.addCondition(
                                                 CryptoCondition(
                                                     Crypto(
-                                                        name = "btc",
+                                                        shortName = "btc",
+                                                        fullName = "Bitcoin",
                                                         icon = R.drawable.ic_launcher_foreground
                                                     ),
                                                     40000000000.0 + conditionId * 1500000000,
@@ -162,7 +165,8 @@ class MainActivity : ComponentActivity() {
                                 }
                                 
                                 Spacer(modifier = Modifier.height(20.dp))
-                                
+
+                                Log.i("alitest", "onCreate: ${state.cryptoMarket.toCryptoList()}")
                                 val stats = state.cryptoMarket.cryptoStats.entries.toList()
                                 isRial = state.dstCurrency == "rls"
 
