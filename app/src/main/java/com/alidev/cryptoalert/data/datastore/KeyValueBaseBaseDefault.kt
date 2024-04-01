@@ -12,12 +12,11 @@ import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.runBlocking
 
-class KeyValueBase(
-    private val context: Context,
-    fileName: String
-) : KeyValueInterface {
+private val Context.dataStore: DataStore<Preferences> by preferencesDataStore(name = "crypto")
 
-    private val Context.dataStore: DataStore<Preferences> by preferencesDataStore(name = fileName)
+class KeyValueBase(
+    private val context: Context
+) : KeyValueInterface {
 
     override fun readString(key: String): Flow<String?> {
         val value = context.dataStore.data.map { preferences ->

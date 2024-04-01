@@ -9,7 +9,7 @@ class ConditionDataStoreDefault @Inject constructor(
     @ApplicationContext private val context: Context
 ) : ConditionDataStore {
 
-    private val baseKeyValue = KeyValueBase(context, FILE_NAME)
+    private val baseKeyValue = KeyValueBase(context)
 
     override fun readConditions(): Flow<String?> {
         return baseKeyValue.readString(CONDITIONS_KEY)
@@ -29,7 +29,6 @@ class ConditionDataStoreDefault @Inject constructor(
 
 
     companion object {
-        private const val FILE_NAME = "crypto"
         private const val CONDITIONS_KEY = "conditions"
     }
 }
