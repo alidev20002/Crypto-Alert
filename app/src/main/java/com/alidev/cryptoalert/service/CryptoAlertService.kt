@@ -19,6 +19,7 @@ import androidx.core.content.ContextCompat
 import com.alidev.cryptoalert.MainActivity
 import com.alidev.cryptoalert.R
 import com.alidev.cryptoalert.data.repository.condition.ConditionRepository
+import com.alidev.cryptoalert.data.repository.dstcurrency.DstCurrencyRepository
 import com.alidev.cryptoalert.data.repository.stats.CryptoMarketRepository
 import com.alidev.cryptoalert.ui.model.Condition
 import com.alidev.cryptoalert.ui.model.CryptoCondition
@@ -38,6 +39,9 @@ class CryptoAlertService : Service() {
 
     @Inject
     lateinit var conditionRepository: ConditionRepository
+
+    @Inject
+    lateinit var dstCurrencyRepository: DstCurrencyRepository
 
     private lateinit var notificationManager: NotificationManager
 
@@ -131,7 +135,7 @@ class CryptoAlertService : Service() {
         val sourceCurrencies = conditions.distinctBy {
             it.crypto.name
         }.joinToString(separator = ",") { it.crypto.name }
-        val destinationCurrency = "rls"
+        val destinationCurrency = dstCurrencyRepository.readDstCurrencySync()
 
         serviceJob = GlobalScope.launch(Dispatchers.IO) {
             while (isServiceStarted) {
