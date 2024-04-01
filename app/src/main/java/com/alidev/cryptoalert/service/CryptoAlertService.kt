@@ -22,6 +22,7 @@ import com.alidev.cryptoalert.ui.model.CryptoCondition
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -34,6 +35,8 @@ class CryptoAlertService : Service() {
 
     @Inject
     lateinit var conditionRepository: ConditionRepository
+
+    private var serviceJob: Job? = null
 
     override fun onBind(p0: Intent?): IBinder? {
         return null
@@ -97,7 +100,7 @@ class CryptoAlertService : Service() {
         }.joinToString(separator = ",") { it.crypto.name }
         val destinationCurrency = "rls"
 
-        GlobalScope.launch(Dispatchers.IO) {
+        serviceJob = GlobalScope.launch(Dispatchers.IO) {
             while (isServiceStarted) {
                 val market = cryptoMarketRepository.getStats(sourceCurrencies, destinationCurrency)
                 val stats = market.cryptoStats
@@ -109,7 +112,6 @@ class CryptoAlertService : Service() {
                    price?.let {
                        if (isConditionOk(price.toDouble(), cryptoCondition)) {
                            okConditions.add(cryptoCondition)
-                           Log.i("alitest", "startServiceJob: $cryptoCondition")
                            // create a notification with sound and vibration
                        }
                    }
@@ -143,6 +145,7 @@ class CryptoAlertService : Service() {
 
     private fun stopServiceJob() {
         try {
+            serviceJob?.cancel()
             stopSelf()
         }catch (e: Exception) {
             Log.i("alitest", "stopServiceJob: ${e.message}")
