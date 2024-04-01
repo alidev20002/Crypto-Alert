@@ -5,23 +5,26 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class Crypto(
-    @SerialName("name")
-    val name: String,
+    @SerialName("shortName")
+    val shortName: String,
+
+    @SerialName("fullName")
+    val fullName: String,
 
     @SerialName("lowPrice")
-    val lowPrice: Double = 0.0,
+    val lowPrice: String = "",
 
     @SerialName("highPrice")
-    val highPrice: Double = 0.0,
+    val highPrice: String = "",
 
     @SerialName("openPrice")
-    val openPrice: Double = 0.0,
+    val openPrice: String = "",
 
     @SerialName("latestPrice")
-    val latestPrice: Double = 0.0,
+    val latestPrice: String = "",
 
     @SerialName("change")
-    val change: Double = 0.0,
+    val change: String = "",
 
     @SerialName("icon")
     val icon: Int
