@@ -133,8 +133,8 @@ class CryptoAlertService : Service() {
 
         val conditions = conditionRepository.readConditionsSync().toMutableList()
         val sourceCurrencies = conditions.distinctBy {
-            it.crypto.name
-        }.joinToString(separator = ",") { it.crypto.name }
+            it.crypto.shortName
+        }.joinToString(separator = ",") { it.crypto.shortName }
         val destinationCurrency = dstCurrencyRepository.readDstCurrencySync()
 
         serviceJob = GlobalScope.launch(Dispatchers.IO) {
@@ -146,14 +146,14 @@ class CryptoAlertService : Service() {
                     val okConditions = mutableListOf<CryptoCondition>()
 
                     conditions.forEach { cryptoCondition ->
-                        val price = stats["${cryptoCondition.crypto.name}-$destinationCurrency"]?.latest
+                        val price = stats["${cryptoCondition.crypto.shortName}-$destinationCurrency"]?.latest
                         price?.let {
                             if (isConditionOk(price.toDouble(), cryptoCondition)) {
                                 okConditions.add(cryptoCondition)
                                 // create a notification with sound and vibration
                                 val notification = createNotification(
                                     title = "Crypto Alert",
-                                    message = "${cryptoCondition.crypto.name} is reached to $price",
+                                    message = "${cryptoCondition.crypto.shortName} is reached to $price",
                                     smallIcon = R.drawable.ic_launcher_foreground,
                                     isOngoing = false
                                 )
