@@ -1,6 +1,7 @@
 package com.alidev.cryptoalert
 
 import android.os.Bundle
+import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
@@ -55,6 +56,10 @@ class MainActivity : ComponentActivity() {
                         mutableStateOf(false)
                     }
 
+                    var conditionId by rememberSaveable {
+                        mutableStateOf(1.0)
+                    }
+
                     Column(
                         modifier = Modifier.fillMaxSize(),
                         horizontalAlignment = Alignment.CenterHorizontally,
@@ -95,7 +100,11 @@ class MainActivity : ComponentActivity() {
                                             modifier = Modifier
                                                 .combinedClickable(
                                                     onLongClick = {
-                                                        viewModel.removeCondition(it)
+                                                        if (!CryptoAlertService.isServiceStarted) {
+                                                            viewModel.removeCondition(it)
+                                                        }else {
+                                                            Toast.makeText(this@MainActivity, "When Service is running, you cannot modify conditions!", Toast.LENGTH_SHORT).show()
+                                                        }
                                                     },
                                                     onClick = {}
                                                 ),
@@ -114,16 +123,22 @@ class MainActivity : ComponentActivity() {
 
                                 Button(
                                     onClick = {
-                                        viewModel.addCondition(
-                                            CryptoCondition(
-                                                Crypto(
-                                                    name = "btc",
-                                                    icon = R.drawable.ic_launcher_foreground
-                                                ),
-                                                40000000.0,
-                                                Condition.INCREASE
+                                        if (!CryptoAlertService.isServiceStarted) {
+                                            viewModel.addCondition(
+                                                CryptoCondition(
+                                                    Crypto(
+                                                        name = "btc",
+                                                        icon = R.drawable.ic_launcher_foreground
+                                                    ),
+                                                    40000000000.0 + conditionId * 1500000000,
+                                                    Condition.INCREASE
+                                                )
                                             )
-                                        )
+                                            conditionId += 1.0
+                                        }else {
+                                            Toast.makeText(this@MainActivity, "When Service is running, you cannot modify conditions!", Toast.LENGTH_SHORT).show()
+                                        }
+
                                     }
                                 ) {
                                     Text(text = "Add new Condition")
