@@ -3,10 +3,12 @@ package com.alidev.cryptoalert.ui.viewmodel.stats
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.alidev.cryptoalert.data.api.CryptoMarket
+import com.alidev.cryptoalert.data.api.getCryptoIcon
+import com.alidev.cryptoalert.data.api.toCryptoList
 import com.alidev.cryptoalert.data.repository.condition.ConditionRepository
 import com.alidev.cryptoalert.data.repository.dstcurrency.DstCurrencyRepository
 import com.alidev.cryptoalert.data.repository.stats.CryptoMarketRepository
+import com.alidev.cryptoalert.ui.model.Crypto
 import com.alidev.cryptoalert.ui.model.CryptoCondition
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -26,7 +28,7 @@ class CryptoMarketViewModel @Inject constructor(
 
     private val cryptoConditionsAsFlow = conditionRepository.readConditions()
 
-    private val cryptoStateAsFlow = MutableStateFlow(CryptoMarket((emptyMap())))
+    private val cryptoStatsAsFlow = MutableStateFlow(getListOfAvailableCryptos())
 
     private var cryptoConditions = mutableListOf<CryptoCondition>()
 
@@ -34,7 +36,7 @@ class CryptoMarketViewModel @Inject constructor(
 
     val state: StateFlow<MarketState> = combine(
         cryptoConditionsAsFlow,
-        cryptoStateAsFlow,
+        cryptoStatsAsFlow,
         dstCurrencyAsFlow
     ) { conditions,
         stats,
@@ -62,12 +64,12 @@ class CryptoMarketViewModel @Inject constructor(
 
     fun syncCryptoStats(dstCurrency: String = "rls") {
         viewModelScope.launch {
-            val cryptoMarket = try {
-                cryptoMarketRepository.getStats(SRC_CURRENCIES, dstCurrency)
+            val cryptoStats = try {
+                cryptoMarketRepository.getStats(SRC_CURRENCIES, dstCurrency).toCryptoList()
             }catch (e: Exception) {
-                CryptoMarket(emptyMap())
+                getListOfAvailableCryptos()
             }
-            cryptoStateAsFlow.emit(cryptoMarket)
+            cryptoStatsAsFlow.emit(cryptoStats)
         }
     }
 
@@ -88,6 +90,15 @@ class CryptoMarketViewModel @Inject constructor(
     fun saveDstCurrency(dstCurrency: String) {
         viewModelScope.launch {
             dstCurrencyRepository.writeDstCurrency(dstCurrency)
+        }
+    }
+
+    private fun getListOfAvailableCryptos(): List<Crypto> {
+        return SRC_CURRENCIES.split(",").map {
+            Crypto(
+                shortName = it,
+                icon = getCryptoIcon(it)
+            )
         }
     }
 
