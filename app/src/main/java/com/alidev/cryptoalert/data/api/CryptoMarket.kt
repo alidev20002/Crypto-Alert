@@ -14,7 +14,7 @@ fun CryptoMarket.toCryptoList(): List<Crypto> {
     return cryptoStats.entries.toList().map {
     val shortName = it.key.split("-")[0]
         Crypto(
-            shortName = shortName,
+            shortName = shortName.uppercase(),
             lowPrice = it.value.dayLow,
             highPrice = it.value.dayHigh,
             openPrice = it.value.dayOpen,
