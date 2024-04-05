@@ -1,7 +1,6 @@
 package com.alidev.cryptoalert
 
 import android.os.Bundle
-import android.util.Log
 import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -24,7 +23,6 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
-import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
@@ -40,7 +38,6 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import com.alidev.cryptoalert.data.api.getCryptoIcon
-import com.alidev.cryptoalert.data.api.toCryptoList
 import com.alidev.cryptoalert.service.CryptoAlertService
 import com.alidev.cryptoalert.ui.model.Condition
 import com.alidev.cryptoalert.ui.model.Crypto
@@ -132,9 +129,10 @@ class MainActivity : ComponentActivity() {
                                                 ),
                                             horizontalArrangement = Arrangement.spacedBy(3.dp)
                                         ) {
-                                            Icon(
+                                            Image(
                                                 painter = painterResource(id = it.crypto.icon),
-                                                contentDescription = null
+                                                contentDescription = "",
+                                                contentScale = ContentScale.FillBounds
                                             )
                                             Text(text = it.crypto.shortName)
                                             Text(text = "${it.expectedPrice}")
@@ -168,8 +166,7 @@ class MainActivity : ComponentActivity() {
                                 
                                 Spacer(modifier = Modifier.height(20.dp))
 
-                                Log.i("alitest", "onCreate: ${state.cryptoMarket.toCryptoList()}")
-                                val stats = state.cryptoMarket.toCryptoList()
+                                val stats = state.cryptos
                                 isRial = state.dstCurrency == "rls"
 
                                 Row {
