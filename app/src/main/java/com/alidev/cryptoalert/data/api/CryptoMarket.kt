@@ -1,5 +1,6 @@
 package com.alidev.cryptoalert.data.api
 
+import com.alidev.cryptoalert.R
 import com.alidev.cryptoalert.ui.model.Crypto
 import com.google.gson.annotations.SerializedName
 
@@ -19,15 +20,32 @@ fun CryptoMarket.toCryptoList(): List<Crypto> {
             openPrice = it.value.dayOpen,
             latestPrice = it.value.latest,
             change = it.value.dayChange,
-            icon = getIcon(shortName)
+            icon = getCryptoIcon(shortName)
         )
     }
 }
 
-private fun getIcon(shortName: String): Int {
+fun getCryptoIcon(shortName: String): Int {
     return when(shortName) {
-        "btc" -> 1
-        "etc" -> 2
-        else -> 3
+        "aave" -> R.drawable.aave
+        "ada" -> R.drawable.ada
+        "bch" -> R.drawable.bch
+        "bnb" -> R.drawable.bnb
+        "btc" -> R.drawable.btc
+        "dai" -> R.drawable.dai
+        "doge" -> R.drawable.doge
+        "dot" -> R.drawable.dot
+        "eos" -> R.drawable.eos
+        "etc" -> R.drawable.etc
+        "eth" -> R.drawable.eth
+        "link" -> R.drawable.link
+        "ltc" -> R.drawable.ltc
+        "shib" -> R.drawable.shib
+        "trx" -> R.drawable.trx
+        "uni" -> R.drawable.uni
+        "usdt" -> R.drawable.usdt
+        "xlm" -> R.drawable.xlm
+        "xrp" -> R.drawable.xrp
+        else -> R.drawable.coin
     }
 }
