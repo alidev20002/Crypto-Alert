@@ -7,6 +7,7 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
 import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.Arrangement
@@ -35,8 +36,10 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
+import com.alidev.cryptoalert.data.api.getCryptoIcon
 import com.alidev.cryptoalert.data.api.toCryptoList
 import com.alidev.cryptoalert.service.CryptoAlertService
 import com.alidev.cryptoalert.ui.model.Condition
@@ -147,7 +150,7 @@ class MainActivity : ComponentActivity() {
                                                 CryptoCondition(
                                                     Crypto(
                                                         shortName = "btc",
-                                                        icon = R.drawable.ic_launcher_foreground
+                                                        icon = getCryptoIcon("btc")
                                                     ),
                                                     40000000000.0 + conditionId * 1500000000,
                                                     Condition.INCREASE
@@ -166,7 +169,7 @@ class MainActivity : ComponentActivity() {
                                 Spacer(modifier = Modifier.height(20.dp))
 
                                 Log.i("alitest", "onCreate: ${state.cryptoMarket.toCryptoList()}")
-                                val stats = state.cryptoMarket.cryptoStats.entries.toList()
+                                val stats = state.cryptoMarket.toCryptoList()
                                 isRial = state.dstCurrency == "rls"
 
                                 Row {
@@ -217,8 +220,13 @@ class MainActivity : ComponentActivity() {
                                                 .padding(8.dp),
                                             horizontalAlignment = Alignment.CenterHorizontally
                                         ) {
-                                            Text(text = it.value.latest)
-                                            Text(text = it.key)
+                                            Image(
+                                                painter = painterResource(id = it.icon),
+                                                contentDescription = "",
+                                                contentScale = ContentScale.FillBounds
+                                            )
+                                            Text(text = it.latestPrice)
+                                            Text(text = it.shortName)
                                         }
                                     }
                                 }
