@@ -147,7 +147,6 @@ class MainActivity : ComponentActivity() {
                                                 CryptoCondition(
                                                     Crypto(
                                                         shortName = "btc",
-                                                        fullName = "Bitcoin",
                                                         icon = R.drawable.ic_launcher_foreground
                                                     ),
                                                     40000000000.0 + conditionId * 1500000000,

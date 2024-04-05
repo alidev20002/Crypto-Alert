@@ -8,9 +8,6 @@ data class Crypto(
     @SerialName("shortName")
     val shortName: String,
 
-    @SerialName("fullName")
-    val fullName: String,
-
     @SerialName("lowPrice")
     val lowPrice: String = "",
 

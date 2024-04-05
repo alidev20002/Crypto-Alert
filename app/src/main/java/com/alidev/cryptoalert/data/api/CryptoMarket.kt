@@ -14,7 +14,6 @@ fun CryptoMarket.toCryptoList(): List<Crypto> {
     val shortName = it.key.split("-")[0]
         Crypto(
             shortName = shortName,
-            fullName = getFullName(shortName),
             lowPrice = it.value.dayLow,
             highPrice = it.value.dayHigh,
             openPrice = it.value.dayOpen,
@@ -22,14 +21,6 @@ fun CryptoMarket.toCryptoList(): List<Crypto> {
             change = it.value.dayChange,
             icon = getIcon(shortName)
         )
-    }
-}
-
-private fun getFullName(shortName: String): String {
-    return when(shortName) {
-        "btc" -> "Bitcoin"
-        "etc" -> "Etherium classic"
-        else -> ""
     }
 }
 
