@@ -96,7 +96,7 @@ class CryptoMarketViewModel @Inject constructor(
     private fun getListOfAvailableCryptos(): List<Crypto> {
         return SRC_CURRENCIES.split(",").map {
             Crypto(
-                shortName = it,
+                shortName = it.uppercase(),
                 icon = getCryptoIcon(it)
             )
         }
@@ -105,5 +105,19 @@ class CryptoMarketViewModel @Inject constructor(
     companion object {
         private const val SRC_CURRENCIES = "btc,eth,ltc,usdt,xrp,bch,bnb,eos,xlm,etc," +
                 "trx,doge,uni,dai,link,dot,aave,ada,shib"
+
+        fun getListOfAvailableCryptos(): List<Crypto> {
+            return SRC_CURRENCIES.split(",").map {
+                Crypto(
+                    shortName = it.uppercase(),
+                    lowPrice = "0.0",
+                    highPrice = "0.0",
+                    openPrice = "0.0",
+                    latestPrice = "0.0",
+                    change = "0.0",
+                    icon = getCryptoIcon(it)
+                )
+            }
+        }
     }
 }
