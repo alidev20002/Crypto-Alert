@@ -18,12 +18,13 @@ import androidx.compose.ui.unit.dp
 import com.alidev.cryptoalert.ui.component.BottomTabBar
 import com.alidev.cryptoalert.ui.component.Header
 import com.alidev.cryptoalert.ui.model.Crypto
+import com.alidev.cryptoalert.ui.model.CryptoCondition
 import com.alidev.cryptoalert.ui.viewmodel.stats.CryptoMarketViewModel
 
 @Composable
 fun MainScreen(
     cryptos: List<Crypto>,
-    onAddConditionClick: () -> Unit,
+    onAddConditionClick: (CryptoCondition) -> Unit,
     modifier: Modifier = Modifier
 ) {
 

@@ -50,13 +50,14 @@ import androidx.compose.ui.window.Dialog
 import com.alidev.cryptoalert.R
 import com.alidev.cryptoalert.ui.model.Condition
 import com.alidev.cryptoalert.ui.model.Crypto
+import com.alidev.cryptoalert.ui.model.CryptoCondition
 import com.alidev.cryptoalert.ui.viewmodel.stats.CryptoMarketViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun CryptoStatsScreen(
     cryptos: List<Crypto>,
-    onAddClick: () -> Unit,
+    onAddClick: (CryptoCondition) -> Unit,
     modifier: Modifier = Modifier
 ) {
 
@@ -303,7 +304,15 @@ fun CryptoStatsScreen(
                 colors = ButtonDefaults.buttonColors(
                     containerColor = Color(0xFF9142FF)
                 ),
-                onClick = onAddClick
+                onClick = {
+                    onAddClick(
+                        CryptoCondition(
+                            crypto = selectedCrypto,
+                            expectedPrice = expectedPrice.toDouble(),
+                            condition = condition
+                        )
+                    )
+                }
             ) {
                 Text(
                     text = "Add Condition",
