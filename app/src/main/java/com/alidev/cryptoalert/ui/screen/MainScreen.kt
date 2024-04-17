@@ -26,6 +26,7 @@ fun MainScreen(
     cryptos: List<Crypto>,
     cryptoConditions: List<CryptoCondition>,
     onAddConditionClick: (CryptoCondition) -> Unit,
+    onRemoveConditionClick: (CryptoCondition) -> Unit,
     onStartServiceClick: () -> Unit,
     onStopServiceClick: () -> Unit,
     modifier: Modifier = Modifier
@@ -59,7 +60,8 @@ fun MainScreen(
                     CryptoServiceScreen(
                         conditions = cryptoConditions,
                         onStartServiceClick = onStartServiceClick,
-                        onStopServiceClick = onStopServiceClick
+                        onStopServiceClick = onStopServiceClick,
+                        onRemoveConditionClick = onRemoveConditionClick
                     )
                 }
             }
@@ -91,6 +93,7 @@ private fun MainScreenPreview() {
         cryptoConditions = emptyList(),
         onAddConditionClick = {},
         onStartServiceClick = {},
-        onStopServiceClick = {}
+        onStopServiceClick = {},
+        onRemoveConditionClick = {}
     )
 }

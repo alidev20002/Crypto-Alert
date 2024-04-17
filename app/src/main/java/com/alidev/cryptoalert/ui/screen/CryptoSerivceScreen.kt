@@ -1,8 +1,9 @@
 package com.alidev.cryptoalert.ui.screen
 
+import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
+import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -22,6 +23,10 @@ import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -32,19 +37,30 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.compose.ui.window.Dialog
 import com.alidev.cryptoalert.R
 import com.alidev.cryptoalert.data.api.getCryptoIcon
 import com.alidev.cryptoalert.ui.model.Condition
 import com.alidev.cryptoalert.ui.model.Crypto
 import com.alidev.cryptoalert.ui.model.CryptoCondition
 
+@OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun CryptoServiceScreen(
     conditions: List<CryptoCondition>,
     onStartServiceClick: () -> Unit,
     onStopServiceClick: () -> Unit,
+    onRemoveConditionClick: (CryptoCondition) -> Unit,
     modifier: Modifier = Modifier
 ) {
+
+    var expanded by remember {
+        mutableStateOf(false)
+    }
+
+    var selectedCrypto by remember {
+        mutableStateOf<CryptoCondition?>(null)
+    }
 
     Column(
         modifier = modifier
@@ -113,12 +129,15 @@ fun CryptoServiceScreen(
                             ambientColor = Color(0xFF000000)
                         )
                         .clip(RoundedCornerShape(12.dp))
-                        .clickable(
+                        .combinedClickable(
                             interactionSource = MutableInteractionSource(),
-                            indication = rememberRipple()
-                        ) {
-
-                        }
+                            indication = rememberRipple(),
+                            onLongClick = {
+                                selectedCrypto = it
+                                expanded = true
+                            },
+                            onClick = {}
+                        )
                         .background(Color(0xFF272727))
                         .padding(horizontal = 8.dp, vertical = 8.dp),
                     verticalAlignment = Alignment.CenterVertically,
@@ -172,6 +191,99 @@ fun CryptoServiceScreen(
             }
         }
     }
+
+    if (expanded) {
+        Dialog(
+            onDismissRequest = { expanded = false }
+        ) {
+
+            Column(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .background(Color(0xFF272727), RoundedCornerShape(16.dp))
+                    .padding(16.dp),
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+
+                Icon(
+                    modifier = Modifier
+                        .size(32.dp),
+                    painter = painterResource(id = R.drawable.recycle_bin_icon),
+                    contentDescription = "",
+                    tint = Color(0xFFE6445D)
+                )
+
+                Text(
+                    modifier = Modifier
+                        .padding(vertical = 8.dp),
+                    text = "Remove Condition",
+                    color = Color(0xFFE6445D),
+                    fontSize = 16.sp,
+                    fontWeight = FontWeight(700)
+                )
+
+                Spacer(modifier = Modifier.height(12.dp))
+
+                Text(
+                    modifier = Modifier,
+                    text = "Are you sure you want to remove this item from the list?",
+                    color = Color(0xFFAFAEAE),
+                    fontSize = 14.sp,
+                    fontWeight = FontWeight(300)
+                )
+
+                Spacer(modifier = Modifier.height(12.dp))
+
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth(),
+                    horizontalArrangement = Arrangement.End
+                ) {
+
+                    Button(
+                        modifier = Modifier
+                            .height(42.dp),
+                        shape = RoundedCornerShape(8.dp),
+                        colors = ButtonDefaults.buttonColors(
+                            containerColor = Color.Transparent
+                        ),
+                        onClick = {
+                            expanded = false
+                        }
+                    ) {
+                        Text(
+                            text = "NO",
+                            color = Color(0xFF9142FF),
+                            fontSize = 16.sp,
+                            fontWeight = FontWeight(500)
+                        )
+                    }
+
+                    Button(
+                        modifier = Modifier
+                            .height(42.dp),
+                        shape = RoundedCornerShape(8.dp),
+                        colors = ButtonDefaults.buttonColors(
+                            containerColor = Color.Transparent
+                        ),
+                        onClick = {
+                            selectedCrypto?.let {
+                                onRemoveConditionClick(it)
+                            }
+                            expanded = false
+                        }
+                    ) {
+                        Text(
+                            text = "YES",
+                            color = Color(0xFF9142FF),
+                            fontSize = 16.sp,
+                            fontWeight = FontWeight(500)
+                        )
+                    }
+                }
+            }
+        }
+    }
 }
 
 @Preview(showBackground = true)
@@ -197,6 +309,7 @@ private fun CryptoServiceScreenPreview() {
             )
         ),
         onStartServiceClick = {},
-        onStopServiceClick = {}
+        onStopServiceClick = {},
+        onRemoveConditionClick = {}
     )
 }

@@ -9,6 +9,7 @@ import androidx.compose.material3.Surface
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import com.alidev.cryptoalert.service.CryptoAlertService
 import com.alidev.cryptoalert.ui.screen.MainScreen
 import com.alidev.cryptoalert.ui.theme.CryptoAlertTheme
 import com.alidev.cryptoalert.ui.viewmodel.stats.CryptoMarketState
@@ -44,8 +45,15 @@ class MainActivity : ComponentActivity() {
                                 onAddConditionClick = {
                                     viewModel.addCondition(it)
                                 },
-                                onStartServiceClick = {},
-                                onStopServiceClick = {}
+                                onRemoveConditionClick = {
+                                    viewModel.removeCondition(it)
+                                },
+                                onStartServiceClick = {
+                                    CryptoAlertService.start(this)
+                                },
+                                onStopServiceClick = {
+                                    CryptoAlertService.stop(this)
+                                }
                             )
                         }
                     }
