@@ -40,9 +40,12 @@ class MainActivity : ComponentActivity() {
                         is CryptoMarketState -> {
                             MainScreen(
                                 cryptos = state.cryptos,
+                                cryptoConditions = state.cryptoConditions,
                                 onAddConditionClick = {
                                     viewModel.addCondition(it)
-                                }
+                                },
+                                onStartServiceClick = {},
+                                onStopServiceClick = {}
                             )
                         }
                     }

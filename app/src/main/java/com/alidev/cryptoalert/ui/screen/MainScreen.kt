@@ -24,7 +24,10 @@ import com.alidev.cryptoalert.ui.viewmodel.stats.CryptoMarketViewModel
 @Composable
 fun MainScreen(
     cryptos: List<Crypto>,
+    cryptoConditions: List<CryptoCondition>,
     onAddConditionClick: (CryptoCondition) -> Unit,
+    onStartServiceClick: () -> Unit,
+    onStopServiceClick: () -> Unit,
     modifier: Modifier = Modifier
 ) {
 
@@ -52,7 +55,13 @@ fun MainScreen(
                         onAddClick = onAddConditionClick
                     )
                 }
-                2 -> {}
+                2 -> {
+                    CryptoServiceScreen(
+                        conditions = cryptoConditions,
+                        onStartServiceClick = onStartServiceClick,
+                        onStopServiceClick = onStopServiceClick
+                    )
+                }
             }
         }
 
@@ -79,6 +88,9 @@ fun MainScreen(
 private fun MainScreenPreview() {
     MainScreen(
         cryptos = CryptoMarketViewModel.getListOfAvailableCryptos(),
-        onAddConditionClick = {}
+        cryptoConditions = emptyList(),
+        onAddConditionClick = {},
+        onStartServiceClick = {},
+        onStopServiceClick = {}
     )
 }
