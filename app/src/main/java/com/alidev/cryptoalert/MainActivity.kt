@@ -1,6 +1,7 @@
 package com.alidev.cryptoalert
 
 import android.os.Bundle
+import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
@@ -43,16 +44,33 @@ class MainActivity : ComponentActivity() {
                                 cryptos = state.cryptos,
                                 cryptoConditions = state.cryptoConditions,
                                 onAddConditionClick = {
-                                    viewModel.addCondition(it)
+                                    if (!CryptoAlertService.isServiceStarted) {
+                                        viewModel.addCondition(it)
+                                    }else {
+                                        Toast.makeText(this, "When Service is running, you cannot modify conditions!", Toast.LENGTH_SHORT).show()
+                                    }
                                 },
                                 onRemoveConditionClick = {
-                                    viewModel.removeCondition(it)
+                                    if (!CryptoAlertService.isServiceStarted) {
+                                        viewModel.removeCondition(it)
+                                    }else {
+                                        Toast.makeText(this, "When Service is running, you cannot modify conditions!", Toast.LENGTH_SHORT).show()
+                                    }
                                 },
                                 onStartServiceClick = {
-                                    CryptoAlertService.start(this)
+                                    if (!CryptoAlertService.isServiceStarted) {
+                                        CryptoAlertService.start(this)
+                                    }else {
+                                        Toast.makeText(this, "Service is running!", Toast.LENGTH_SHORT).show()
+                                    }
+
                                 },
                                 onStopServiceClick = {
-                                    CryptoAlertService.stop(this)
+                                    if (CryptoAlertService.isServiceStarted) {
+                                        CryptoAlertService.stop(this)
+                                    }else {
+                                        Toast.makeText(this, "Service is not running!", Toast.LENGTH_SHORT).show()
+                                    }
                                 }
                             )
                         }
