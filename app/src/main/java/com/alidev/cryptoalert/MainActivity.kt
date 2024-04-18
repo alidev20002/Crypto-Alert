@@ -43,6 +43,7 @@ class MainActivity : ComponentActivity() {
                             MainScreen(
                                 cryptos = state.cryptos,
                                 cryptoConditions = state.cryptoConditions,
+                                dstCurrency = state.dstCurrency,
                                 onAddConditionClick = {
                                     if (!CryptoAlertService.isServiceStarted) {
                                         viewModel.addCondition(it)

@@ -52,11 +52,13 @@ import com.alidev.cryptoalert.ui.model.Condition
 import com.alidev.cryptoalert.ui.model.Crypto
 import com.alidev.cryptoalert.ui.model.CryptoCondition
 import com.alidev.cryptoalert.ui.viewmodel.stats.CryptoMarketViewModel
+import com.alidev.cryptoalert.utils.toFormattedPrice
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun CryptoStatsScreen(
     cryptos: List<Crypto>,
+    dstCurrency: String,
     onAddClick: (CryptoCondition) -> Unit,
     modifier: Modifier = Modifier
 ) {
@@ -112,19 +114,22 @@ fun CryptoStatsScreen(
                             color = Color(0xFFFFFFFF)
                         )
 
+                        val isChangePositive = it.change.toDouble() >= 0
+                        val changeColor = if (isChangePositive) Color(0xFF30E0A1) else Color(0xFFE6445D)
+                        val changeText = if (isChangePositive) "+${it.change}" else it.change
                         Text(
-                            text = it.change,
-                            color = Color(0xFFAFAEAE)
+                            text = changeText,
+                            color = changeColor
                         )
                     }
 
                     Text(
                         modifier = Modifier
                             .padding(top = 5.dp),
-                        text = it.latestPrice,
+                        text = it.latestPrice.toFormattedPrice(dstCurrency),
                         color = Color(0xFFFFFFFF),
-                        fontSize = 15.sp,
-                        fontWeight = FontWeight(500)
+                        fontSize = 13.sp,
+                        fontWeight = FontWeight(300)
                     )
 
                     Spacer(modifier = Modifier.height(20.dp))
@@ -394,6 +399,7 @@ fun CryptoStatsScreen(
 private fun CryptoStatsScreenPreview() {
     CryptoStatsScreen(
         cryptos = CryptoMarketViewModel.getListOfAvailableCryptos(),
+        dstCurrency = "rls",
         onAddClick = {}
     )
 }

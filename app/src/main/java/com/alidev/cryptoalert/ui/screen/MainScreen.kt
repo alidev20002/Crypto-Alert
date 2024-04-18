@@ -25,6 +25,7 @@ import com.alidev.cryptoalert.ui.viewmodel.stats.CryptoMarketViewModel
 fun MainScreen(
     cryptos: List<Crypto>,
     cryptoConditions: List<CryptoCondition>,
+    dstCurrency: String,
     onAddConditionClick: (CryptoCondition) -> Unit,
     onRemoveConditionClick: (CryptoCondition) -> Unit,
     onStartServiceClick: () -> Unit,
@@ -53,6 +54,7 @@ fun MainScreen(
                 1 -> {
                     CryptoStatsScreen(
                         cryptos = cryptos,
+                        dstCurrency = dstCurrency,
                         onAddClick = onAddConditionClick
                     )
                 }
@@ -91,6 +93,7 @@ private fun MainScreenPreview() {
     MainScreen(
         cryptos = CryptoMarketViewModel.getListOfAvailableCryptos(),
         cryptoConditions = emptyList(),
+        dstCurrency = "rls",
         onAddConditionClick = {},
         onStartServiceClick = {},
         onStopServiceClick = {},
