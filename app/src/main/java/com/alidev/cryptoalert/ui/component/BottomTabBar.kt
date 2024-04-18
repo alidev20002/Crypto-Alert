@@ -59,7 +59,7 @@ fun BottomTabBar(
             Icon(
                 modifier = Modifier
                     .size(24.dp),
-                painter = painterResource(id = R.drawable.speedometer_icon),
+                painter = painterResource(id = R.drawable.tools_icon),
                 contentDescription = "",
                 tint = if (selectedTabIndex == 0) Color(0xFF383636) else Color(0xFFFFFFFF)
             )
