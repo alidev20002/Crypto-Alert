@@ -76,13 +76,16 @@ fun CryptoServiceScreen(
             horizontalArrangement = Arrangement.SpaceAround
         ){
 
+            val isStartButtonEnabled = conditions.isNotEmpty()
             Button(
                 modifier = Modifier
                     .height(52.dp),
                 shape = RoundedCornerShape(8.dp),
                 colors = ButtonDefaults.buttonColors(
-                    containerColor = Color(0xFF9142FF)
+                    containerColor = Color(0xFF9142FF),
+                    disabledContainerColor = Color(0xFFAFAEAE)
                 ),
+                enabled = isStartButtonEnabled,
                 onClick = onStartServiceClick
             ) {
                 Text(
