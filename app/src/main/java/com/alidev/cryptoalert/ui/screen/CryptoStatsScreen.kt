@@ -221,7 +221,9 @@ fun CryptoStatsScreen(
                                 interactionSource = MutableInteractionSource(),
                                 indication = rememberRipple()
                             ) {
-                                expectedPrice = (expectedPrice.toDouble() - 100).toBigDecimal().toPlainString()
+                                expectedPrice = (expectedPrice.toDouble() - 100)
+                                    .toBigDecimal()
+                                    .toPlainString()
                             }
                             .padding(8.dp),
                         painter = painterResource(id = R.drawable.minus_icon),
@@ -237,7 +239,9 @@ fun CryptoStatsScreen(
                                 interactionSource = MutableInteractionSource(),
                                 indication = rememberRipple()
                             ) {
-                                expectedPrice = (expectedPrice.toDouble() + 100).toBigDecimal().toPlainString()
+                                expectedPrice = (expectedPrice.toDouble() + 100)
+                                    .toBigDecimal()
+                                    .toPlainString()
                             }
                             .padding(8.dp),
                         painter = painterResource(id = R.drawable.plus_icon),
