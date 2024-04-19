@@ -43,6 +43,7 @@ import com.alidev.cryptoalert.data.api.getCryptoIcon
 import com.alidev.cryptoalert.ui.model.Condition
 import com.alidev.cryptoalert.ui.model.Crypto
 import com.alidev.cryptoalert.ui.model.CryptoCondition
+import com.alidev.cryptoalert.utils.toFormattedPrice
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
@@ -165,9 +166,11 @@ fun CryptoServiceScreen(
                             color = Color(0xFFFFFFFF)
                         )
 
-                        val conditionText = if (it.condition == Condition.INCREASE) "Greater Than " else "Less Than "
+                        val conditionText =
+                            if (it.condition == Condition.INCREASE) "Greater Than " else "Less Than "
                         Text(
-                            text = "$conditionText ${it.expectedPrice}",
+                            text = "$conditionText ${it.expectedPrice
+                                .toBigDecimal().toPlainString().toFormattedPrice()}",
                             color = Color(0xFFFFFFFF)
                         )
                     }
