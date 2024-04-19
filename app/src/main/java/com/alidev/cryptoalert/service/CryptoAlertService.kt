@@ -139,6 +139,9 @@ class CryptoAlertService : Service() {
 
         serviceJob = GlobalScope.launch(Dispatchers.IO) {
             while (isServiceStarted) {
+
+                delay(DELAY_BETWEEN_REQUEST_MILLIS)
+
                 try {
                     val market = cryptoMarketRepository.getStats(sourceCurrencies, destinationCurrency)
                     val stats = market.cryptoStats
@@ -179,8 +182,6 @@ class CryptoAlertService : Service() {
                 }catch (e: Exception) {
                     Log.i("alitest", "startServiceJob: ${e.message}")
                 }
-
-                delay(DELAY_BETWEEN_REQUEST_MILLIS)
             }
         }
     }
