@@ -10,15 +10,22 @@ data class CryptoMarket(
     val cryptoStats: Map<String, CryptoStats>
 )
 
-fun CryptoMarket.toCryptoList(): List<Crypto> {
+fun CryptoMarket.toCryptoList(dstCurrency: String): List<Crypto> {
     return cryptoStats.entries.toList().map {
-    val shortName = it.key.split("-")[0]
+        val shortName = it.key.split("-")[0]
+
+        val latestPrice = if (dstCurrency == "rls") {
+                String.format("%.0f", it.value.latest.toFloat() / 10)
+            } else{
+                it.value.latest
+            }
+
         Crypto(
             shortName = shortName.uppercase(),
             lowPrice = it.value.dayLow,
             highPrice = it.value.dayHigh,
             openPrice = it.value.dayOpen,
-            latestPrice = it.value.latest,
+            latestPrice = latestPrice,
             change = it.value.dayChange,
             icon = getCryptoIcon(shortName)
         )
