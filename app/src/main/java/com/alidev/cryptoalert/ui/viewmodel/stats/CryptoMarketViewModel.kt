@@ -65,7 +65,7 @@ class CryptoMarketViewModel @Inject constructor(
     fun syncCryptoStats(dstCurrency: String = "rls") {
         viewModelScope.launch {
             val cryptoStats = try {
-                cryptoMarketRepository.getStats(SRC_CURRENCIES, dstCurrency).toCryptoList()
+                cryptoMarketRepository.getStats(SRC_CURRENCIES, dstCurrency).toCryptoList(dstCurrency)
             }catch (e: Exception) {
                 getListOfAvailableCryptos()
             }
