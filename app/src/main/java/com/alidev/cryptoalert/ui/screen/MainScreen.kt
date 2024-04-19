@@ -60,7 +60,6 @@ fun MainScreen(
                 1 -> {
                     CryptoStatsScreen(
                         cryptos = cryptos,
-                        dstCurrency = dstCurrency,
                         onAddClick = onAddConditionClick
                     )
                 }

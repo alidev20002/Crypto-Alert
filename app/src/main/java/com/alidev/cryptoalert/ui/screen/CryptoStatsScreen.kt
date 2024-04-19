@@ -51,6 +51,7 @@ import com.alidev.cryptoalert.R
 import com.alidev.cryptoalert.ui.model.Condition
 import com.alidev.cryptoalert.ui.model.Crypto
 import com.alidev.cryptoalert.ui.model.CryptoCondition
+import com.alidev.cryptoalert.ui.transformation.PriceVisualTransformation
 import com.alidev.cryptoalert.ui.viewmodel.stats.CryptoMarketViewModel
 import com.alidev.cryptoalert.utils.toFormattedPrice
 
@@ -58,7 +59,6 @@ import com.alidev.cryptoalert.utils.toFormattedPrice
 @Composable
 fun CryptoStatsScreen(
     cryptos: List<Crypto>,
-    dstCurrency: String,
     onAddClick: (CryptoCondition) -> Unit,
     modifier: Modifier = Modifier
 ) {
@@ -126,7 +126,7 @@ fun CryptoStatsScreen(
                     Text(
                         modifier = Modifier
                             .padding(top = 5.dp),
-                        text = it.latestPrice.toFormattedPrice(dstCurrency),
+                        text = it.latestPrice.toFormattedPrice(),
                         color = Color(0xFFFFFFFF),
                         fontSize = 13.sp,
                         fontWeight = FontWeight(300)
@@ -221,7 +221,7 @@ fun CryptoStatsScreen(
                                 interactionSource = MutableInteractionSource(),
                                 indication = rememberRipple()
                             ) {
-                                expectedPrice = "${expectedPrice.toDouble() - 100}"
+                                expectedPrice = (expectedPrice.toDouble() - 100).toBigDecimal().toPlainString()
                             }
                             .padding(8.dp),
                         painter = painterResource(id = R.drawable.minus_icon),
@@ -237,13 +237,14 @@ fun CryptoStatsScreen(
                                 interactionSource = MutableInteractionSource(),
                                 indication = rememberRipple()
                             ) {
-                                expectedPrice = "${expectedPrice.toDouble() + 100}"
+                                expectedPrice = (expectedPrice.toDouble() + 100).toBigDecimal().toPlainString()
                             }
                             .padding(8.dp),
                         painter = painterResource(id = R.drawable.plus_icon),
                         contentDescription = ""
                     )
-                }
+                },
+                visualTransformation = PriceVisualTransformation()
             )
 
             Row(
@@ -399,7 +400,6 @@ fun CryptoStatsScreen(
 private fun CryptoStatsScreenPreview() {
     CryptoStatsScreen(
         cryptos = CryptoMarketViewModel.getListOfAvailableCryptos(),
-        dstCurrency = "rls",
         onAddClick = {}
     )
 }
