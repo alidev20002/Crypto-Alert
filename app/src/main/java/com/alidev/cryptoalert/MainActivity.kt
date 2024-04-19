@@ -72,6 +72,11 @@ class MainActivity : ComponentActivity() {
                                     }else {
                                         Toast.makeText(this, "Service is not running!", Toast.LENGTH_SHORT).show()
                                     }
+                                },
+                                onSaveClick = {
+                                    viewModel.saveDstCurrency(it)
+                                    viewModel.syncCryptoStats(it)
+                                    Toast.makeText(this, "Changes Saved Successfully!!", Toast.LENGTH_SHORT).show()
                                 }
                             )
                         }

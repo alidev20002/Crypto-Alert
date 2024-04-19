@@ -30,6 +30,7 @@ fun MainScreen(
     onRemoveConditionClick: (CryptoCondition) -> Unit,
     onStartServiceClick: () -> Unit,
     onStopServiceClick: () -> Unit,
+    onSaveClick: (String) -> Unit,
     modifier: Modifier = Modifier
 ) {
 
@@ -50,7 +51,12 @@ fun MainScreen(
             Header()
 
             when (selectedTabIndex) {
-                0 -> {}
+                0 -> {
+                    CryptoSettingScreen(
+                        dstCurrency = dstCurrency,
+                        onSaveClick = onSaveClick
+                    )
+                }
                 1 -> {
                     CryptoStatsScreen(
                         cryptos = cryptos,
@@ -97,6 +103,7 @@ private fun MainScreenPreview() {
         onAddConditionClick = {},
         onStartServiceClick = {},
         onStopServiceClick = {},
-        onRemoveConditionClick = {}
+        onRemoveConditionClick = {},
+        onSaveClick = {}
     )
 }
