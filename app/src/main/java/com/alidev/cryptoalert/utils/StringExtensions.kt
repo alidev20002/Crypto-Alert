@@ -1,11 +1,14 @@
 package com.alidev.cryptoalert.utils
 
-import java.text.DecimalFormat
+fun String.toFormattedPrice(): String {
+    val split = this.split(".")
+    val intPart = split[0]
+        .reversed()
+        .chunked(3)
+        .joinToString(",")
+        .reversed()
 
-fun String.toFormattedPrice(dstCurrency: String): String {
-    val decimalFormat = DecimalFormat("###,###,###,###.#####")
-    var number = this.toFloat()
-    if (dstCurrency == "rls")
-        number /= 10
-    return decimalFormat.format(number)
+    val fractionPart = split.getOrNull(1)
+
+    return if (fractionPart == null || fractionPart == "0") intPart else "$intPart.$fractionPart"
 }
