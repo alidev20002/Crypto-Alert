@@ -20,6 +20,7 @@ import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.ripple.rememberRipple
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
@@ -42,11 +43,13 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
+import androidx.core.text.isDigitsOnly
 import com.alidev.cryptoalert.R
 import com.alidev.cryptoalert.ui.model.Condition
 import com.alidev.cryptoalert.ui.model.Crypto
@@ -197,7 +200,8 @@ fun CryptoStatsScreen(
                     .padding(horizontal = 8.dp),
                 value = expectedPrice,
                 onValueChange = {
-                    expectedPrice = it
+                    if (it.isDigitsOnly())
+                        expectedPrice = it
                 },
                 singleLine = true,
                 maxLines = 1,
@@ -248,7 +252,8 @@ fun CryptoStatsScreen(
                         contentDescription = ""
                     )
                 },
-                visualTransformation = PriceVisualTransformation()
+                visualTransformation = PriceVisualTransformation(),
+                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number)
             )
 
             Row(
