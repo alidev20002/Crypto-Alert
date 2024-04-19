@@ -28,7 +28,8 @@ import androidx.compose.ui.unit.sp
 @Composable
 fun CryptoSettingScreen(
     dstCurrency: String,
-    onSaveClick: (String) -> Unit,
+    canSaveDstCurrency: Boolean,
+    onSaveClick: (Boolean, String) -> Unit,
     modifier: Modifier = Modifier
 ) {
 
@@ -111,7 +112,7 @@ fun CryptoSettingScreen(
                 containerColor = Color(0xFF9142FF)
             ),
             onClick = {
-                onSaveClick(selectedDstCurrency)
+                onSaveClick(canSaveDstCurrency, selectedDstCurrency)
             }
         ) {
             Text(
@@ -129,6 +130,7 @@ fun CryptoSettingScreen(
 private fun CryptoSettingScreenPreview() {
     CryptoSettingScreen(
         dstCurrency = "rls",
-        onSaveClick = {}
+        canSaveDstCurrency = false,
+        onSaveClick = { _, _ -> }
     )
 }
