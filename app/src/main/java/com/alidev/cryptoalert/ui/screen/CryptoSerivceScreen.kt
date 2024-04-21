@@ -3,6 +3,7 @@ package com.alidev.cryptoalert.ui.screen
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
@@ -21,6 +22,7 @@ import androidx.compose.material.ripple.rememberRipple
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -66,7 +68,7 @@ fun CryptoServiceScreen(
     Column(
         modifier = modifier
             .fillMaxSize()
-            .background(Color(0xFF1E1E1E))
+            .background(MaterialTheme.colorScheme.background)
     ) {
 
         Row(
@@ -83,15 +85,15 @@ fun CryptoServiceScreen(
                     .height(52.dp),
                 shape = RoundedCornerShape(8.dp),
                 colors = ButtonDefaults.buttonColors(
-                    containerColor = Color(0xFF9142FF),
-                    disabledContainerColor = Color(0xFFAFAEAE)
+                    containerColor = MaterialTheme.colorScheme.primary,
+                    disabledContainerColor = MaterialTheme.colorScheme.secondary
                 ),
                 enabled = isStartButtonEnabled,
                 onClick = onStartServiceClick
             ) {
                 Text(
                     text = "Start Service",
-                    color = Color(0xFFFFFFFF),
+                    color = MaterialTheme.colorScheme.onPrimary,
                     fontSize = 16.sp,
                     fontWeight = FontWeight(500)
                 )
@@ -102,13 +104,13 @@ fun CryptoServiceScreen(
                     .height(52.dp),
                 shape = RoundedCornerShape(8.dp),
                 colors = ButtonDefaults.buttonColors(
-                    containerColor = Color(0xFF9142FF)
+                    containerColor = MaterialTheme.colorScheme.primary
                 ),
                 onClick = onStopServiceClick
             ) {
                 Text(
                     text = "Stop Service",
-                    color = Color(0xFFFFFFFF),
+                    color = MaterialTheme.colorScheme.onPrimary,
                     fontSize = 16.sp,
                     fontWeight = FontWeight(500)
                 )
@@ -142,7 +144,7 @@ fun CryptoServiceScreen(
                             },
                             onClick = {}
                         )
-                        .background(Color(0xFF272727))
+                        .background(MaterialTheme.colorScheme.surface)
                         .padding(horizontal = 8.dp, vertical = 8.dp),
                     verticalAlignment = Alignment.CenterVertically,
                     horizontalArrangement = Arrangement.spacedBy(8.dp)
@@ -163,7 +165,7 @@ fun CryptoServiceScreen(
 
                         Text(
                             text = it.crypto.shortName,
-                            color = Color(0xFFFFFFFF)
+                            color = MaterialTheme.colorScheme.onBackground
                         )
 
                         val conditionText =
@@ -171,7 +173,7 @@ fun CryptoServiceScreen(
                         Text(
                             text = "$conditionText ${it.expectedPrice
                                 .toBigDecimal().toPlainString().toFormattedPrice()}",
-                            color = Color(0xFFFFFFFF)
+                            color = MaterialTheme.colorScheme.onBackground
                         )
                     }
 
@@ -179,7 +181,7 @@ fun CryptoServiceScreen(
                         if (it.condition == Condition.INCREASE) R.drawable.top_arrow_icon else R.drawable.bottom_arrow_icon
 
                     val conditionColor =
-                        if (it.condition == Condition.INCREASE) Color(0xFF30E0A1) else Color(0xFFE6445D)
+                        if (it.condition == Condition.INCREASE) MaterialTheme.colorScheme.onSecondary else MaterialTheme.colorScheme.error
 
 
                     Icon(
@@ -206,7 +208,7 @@ fun CryptoServiceScreen(
             Column(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .background(Color(0xFF272727), RoundedCornerShape(16.dp))
+                    .background(MaterialTheme.colorScheme.surface, RoundedCornerShape(16.dp))
                     .padding(16.dp),
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
@@ -216,14 +218,14 @@ fun CryptoServiceScreen(
                         .size(32.dp),
                     painter = painterResource(id = R.drawable.recycle_bin_icon),
                     contentDescription = "",
-                    tint = Color(0xFFE6445D)
+                    tint = MaterialTheme.colorScheme.error
                 )
 
                 Text(
                     modifier = Modifier
                         .padding(vertical = 8.dp),
                     text = "Remove Condition",
-                    color = Color(0xFFE6445D),
+                    color = MaterialTheme.colorScheme.error,
                     fontSize = 16.sp,
                     fontWeight = FontWeight(700)
                 )
@@ -233,7 +235,7 @@ fun CryptoServiceScreen(
                 Text(
                     modifier = Modifier,
                     text = "Are you sure you want to remove this item from the list?",
-                    color = Color(0xFFAFAEAE),
+                    color = MaterialTheme.colorScheme.onBackground,
                     fontSize = 14.sp,
                     fontWeight = FontWeight(300)
                 )
@@ -246,46 +248,42 @@ fun CryptoServiceScreen(
                     horizontalArrangement = Arrangement.End
                 ) {
 
-                    Button(
+                    Text(
                         modifier = Modifier
-                            .height(42.dp),
-                        shape = RoundedCornerShape(8.dp),
-                        colors = ButtonDefaults.buttonColors(
-                            containerColor = Color.Transparent
-                        ),
-                        onClick = {
-                            expanded = false
-                        }
-                    ) {
-                        Text(
-                            text = "NO",
-                            color = Color(0xFF9142FF),
-                            fontSize = 16.sp,
-                            fontWeight = FontWeight(500)
-                        )
-                    }
-
-                    Button(
-                        modifier = Modifier
-                            .height(42.dp),
-                        shape = RoundedCornerShape(8.dp),
-                        colors = ButtonDefaults.buttonColors(
-                            containerColor = Color.Transparent
-                        ),
-                        onClick = {
-                            selectedCrypto?.let {
-                                onRemoveConditionClick(it)
+                            .background(MaterialTheme.colorScheme.surface)
+                            .clip(RoundedCornerShape(8.dp))
+                            .clickable(
+                                interactionSource = MutableInteractionSource(),
+                                indication = rememberRipple()
+                            ) {
+                                expanded = false
                             }
-                            expanded = false
-                        }
-                    ) {
-                        Text(
-                            text = "YES",
-                            color = Color(0xFF9142FF),
-                            fontSize = 16.sp,
-                            fontWeight = FontWeight(500)
-                        )
-                    }
+                            .padding(horizontal = 12.dp, vertical = 8.dp),
+                        text = "NO",
+                        color = MaterialTheme.colorScheme.primary,
+                        fontSize = 16.sp,
+                        fontWeight = FontWeight(500)
+                    )
+
+                    Text(
+                        modifier = Modifier
+                            .background(MaterialTheme.colorScheme.surface)
+                            .clip(RoundedCornerShape(8.dp))
+                            .clickable(
+                                interactionSource = MutableInteractionSource(),
+                                indication = rememberRipple()
+                            ) {
+                                selectedCrypto?.let {
+                                    onRemoveConditionClick(it)
+                                }
+                                expanded = false
+                            }
+                            .padding(horizontal = 12.dp, vertical = 8.dp),
+                        text = "YES",
+                        color = MaterialTheme.colorScheme.primary,
+                        fontSize = 16.sp,
+                        fontWeight = FontWeight(500)
+                    )
                 }
             }
         }

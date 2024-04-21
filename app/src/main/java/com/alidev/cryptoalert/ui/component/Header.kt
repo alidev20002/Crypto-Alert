@@ -12,12 +12,9 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.ripple.rememberRipple
 import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.saveable.rememberSaveable
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -31,12 +28,10 @@ import com.alidev.cryptoalert.R
 
 @Composable
 fun Header(
+    isDarkMode: Boolean,
+    onChangeThemeClick: () -> Unit,
     modifier: Modifier = Modifier
 ) {
-
-    var isDarkMode by rememberSaveable {
-        mutableStateOf(true)
-    }
 
     Row(
         modifier = modifier
@@ -50,7 +45,7 @@ fun Header(
 
         Icon(
             modifier = Modifier
-                .size(36.dp)
+                .size(28.dp)
                 .clip(CircleShape)
                 .clickable(
                     interactionSource = MutableInteractionSource(),
@@ -61,12 +56,12 @@ fun Header(
                 .padding(4.dp),
             painter = painterResource(id = R.drawable.setting_icon),
             contentDescription = "",
-            tint = Color(0xFFAFAEAE)
+            tint = MaterialTheme.colorScheme.onBackground
         )
 
         Text(
             text = "Crypto Alert",
-            color = Color(0xFFAFAEAE),
+            color = MaterialTheme.colorScheme.onBackground,
             fontSize = 24.sp,
             fontWeight = FontWeight(900)
         )
@@ -75,18 +70,18 @@ fun Header(
             if (isDarkMode) R.drawable.day_icon else R.drawable.night_icon
         Icon(
             modifier = Modifier
-                .size(36.dp)
+                .size(28.dp)
                 .clip(CircleShape)
                 .clickable(
                     interactionSource = MutableInteractionSource(),
                     indication = rememberRipple()
                 ) {
-                    isDarkMode = !isDarkMode
+                    onChangeThemeClick()
                 }
                 .padding(4.dp),
             painter = painterResource(id = themeModeIcon),
             contentDescription = "",
-            tint = Color(0xFFAFAEAE)
+            tint = MaterialTheme.colorScheme.onBackground
         )
     }
 }
@@ -94,5 +89,8 @@ fun Header(
 @Preview(showBackground = true)
 @Composable
 private fun HeaderPreview() {
-    Header()
+    Header(
+        isDarkMode = false,
+        onChangeThemeClick = {}
+    )
 }

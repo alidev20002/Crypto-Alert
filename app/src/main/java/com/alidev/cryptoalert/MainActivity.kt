@@ -6,10 +6,14 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import com.alidev.cryptoalert.service.CryptoAlertService
 import com.alidev.cryptoalert.ui.screen.MainScreen
 import com.alidev.cryptoalert.ui.theme.CryptoAlertTheme
@@ -26,11 +30,18 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
-            CryptoAlertTheme {
+
+            var isDarkMode by rememberSaveable {
+                mutableStateOf(false)
+            }
+
+            CryptoAlertTheme(
+                darkTheme = isDarkMode
+            ) {
                 // A surface container using the 'background' color from the theme
                 Surface(
                     modifier = Modifier.fillMaxSize(),
-                    color = Color(0xFF1E1E1E)
+                    color = MaterialTheme.colorScheme.background
                 ) {
 
                     val state = viewModel.state.collectAsState().value
@@ -44,6 +55,7 @@ class MainActivity : ComponentActivity() {
                                 cryptos = state.cryptos,
                                 cryptoConditions = state.cryptoConditions,
                                 dstCurrency = state.dstCurrency,
+                                isDarkMode = isDarkMode,
                                 onAddConditionClick = {
                                     if (!CryptoAlertService.isServiceStarted) {
                                         viewModel.addCondition(it)
@@ -81,6 +93,9 @@ class MainActivity : ComponentActivity() {
                                     }else{
                                         Toast.makeText(this, "First remove old conditions!", Toast.LENGTH_SHORT).show()
                                     }
+                                },
+                                onChangeThemeClick = {
+                                    isDarkMode = !isDarkMode
                                 }
                             )
                         }

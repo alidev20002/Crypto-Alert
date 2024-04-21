@@ -26,6 +26,7 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextFieldDefaults
@@ -85,7 +86,7 @@ fun CryptoStatsScreen(
     Column(
         modifier = modifier
             .fillMaxSize()
-            .background(Color(0xFF1E1E1E))
+            .background(MaterialTheme.colorScheme.background)
     ) {
 
         LazyRow(
@@ -101,7 +102,7 @@ fun CryptoStatsScreen(
                 Column(
                     modifier = Modifier
                         .clip(RoundedCornerShape(16.dp))
-                        .background(Color(0xFF9142FF))
+                        .background(MaterialTheme.colorScheme.primary)
                         .width(120.dp)
                         .padding(10.dp)
                 ) {
@@ -114,11 +115,11 @@ fun CryptoStatsScreen(
 
                         Text(
                             text = it.shortName,
-                            color = Color(0xFFFFFFFF)
+                            color = MaterialTheme.colorScheme.onPrimary
                         )
 
                         val isChangePositive = it.change.toDouble() >= 0
-                        val changeColor = if (isChangePositive) Color(0xFF30E0A1) else Color(0xFFE6445D)
+                        val changeColor = if (isChangePositive) MaterialTheme.colorScheme.onSecondary else MaterialTheme.colorScheme.error
                         val changeText = if (isChangePositive) "+${it.change}" else it.change
                         Text(
                             text = changeText,
@@ -130,7 +131,7 @@ fun CryptoStatsScreen(
                         modifier = Modifier
                             .padding(top = 5.dp),
                         text = it.latestPrice.toFormattedPrice(),
-                        color = Color(0xFFFFFFFF),
+                        color = MaterialTheme.colorScheme.onPrimary,
                         fontSize = 13.sp,
                         fontWeight = FontWeight(300)
                     )
@@ -155,7 +156,7 @@ fun CryptoStatsScreen(
                 .fillMaxWidth()
                 .padding(10.dp)
                 .shadow(4.dp, RoundedCornerShape(12.dp))
-                .background(Color(0xFF272727), RoundedCornerShape(12.dp))
+                .background(MaterialTheme.colorScheme.surface, RoundedCornerShape(12.dp))
                 .padding(16.dp),
             verticalArrangement = Arrangement.spacedBy(10.dp)
         ) {
@@ -166,7 +167,7 @@ fun CryptoStatsScreen(
                     .height(60.dp),
                 shape = RoundedCornerShape(8.dp),
                 colors = ButtonDefaults.buttonColors(
-                    containerColor = Color(0xFF9142FF)
+                    containerColor = MaterialTheme.colorScheme.primary
                 ),
                 onClick = { expanded = true },
             ) {
@@ -186,7 +187,7 @@ fun CryptoStatsScreen(
 
                     Text(
                         text = selectedCrypto.shortName,
-                        color = Color(0xFFFFFFFF)
+                        color = MaterialTheme.colorScheme.onPrimary
                     )
                 }
             }
@@ -196,7 +197,7 @@ fun CryptoStatsScreen(
                     .fillMaxWidth()
                     .height(60.dp)
                     .background(Color(0x00000000))
-                    .border(2.dp, Color(0xFF9142FF), RoundedCornerShape(8.dp))
+                    .border(2.dp, MaterialTheme.colorScheme.primary, RoundedCornerShape(8.dp))
                     .padding(horizontal = 8.dp),
                 value = expectedPrice,
                 onValueChange = {
@@ -214,7 +215,7 @@ fun CryptoStatsScreen(
                 colors = TextFieldDefaults.outlinedTextFieldColors(
                     focusedBorderColor = Color.Unspecified,
                     unfocusedBorderColor = Color.Unspecified,
-                    textColor = Color(0xFFFFFFFF)
+                    textColor = MaterialTheme.colorScheme.onBackground
                 ),
                 leadingIcon = {
                     Icon(
@@ -264,14 +265,14 @@ fun CryptoStatsScreen(
             ) {
 
                 val increaseBackgroundColor = if (condition == Condition.INCREASE)
-                    Color(0xFF9142FF)
+                    MaterialTheme.colorScheme.primary
                 else
-                    Color(0xFFAFAEAE)
+                    MaterialTheme.colorScheme.secondary
 
                 val decreaseBackgroundColor = if (condition == Condition.INCREASE)
-                    Color(0xFFAFAEAE)
+                    MaterialTheme.colorScheme.secondary
                 else
-                    Color(0xFF9142FF)
+                    MaterialTheme.colorScheme.primary
 
                 Button(
                     shape = RoundedCornerShape(16.dp, 0.dp, 0.dp, 16.dp),
@@ -285,7 +286,7 @@ fun CryptoStatsScreen(
 
                     Text(
                         text = "Increase",
-                        color = Color(0xFFFFFFFF),
+                        color = MaterialTheme.colorScheme.onPrimary,
                         fontSize = 18.sp,
                         fontWeight = FontWeight(700)
                     )
@@ -302,7 +303,7 @@ fun CryptoStatsScreen(
                 ) {
                     Text(
                         text = "Decrease",
-                        color = Color(0xFFFFFFFF),
+                        color = MaterialTheme.colorScheme.onPrimary,
                         fontSize = 18.sp,
                         fontWeight = FontWeight(700)
                     )
@@ -317,7 +318,7 @@ fun CryptoStatsScreen(
                     .height(60.dp),
                 shape = RoundedCornerShape(8.dp),
                 colors = ButtonDefaults.buttonColors(
-                    containerColor = Color(0xFF9142FF)
+                    containerColor = MaterialTheme.colorScheme.primary
                 ),
                 onClick = {
                     onAddClick(
@@ -331,7 +332,7 @@ fun CryptoStatsScreen(
             ) {
                 Text(
                     text = "Add Condition",
-                    color = Color(0xFFFFFFFF),
+                    color = MaterialTheme.colorScheme.onPrimary,
                     fontSize = 18.sp,
                     fontWeight = FontWeight(700)
                 )
@@ -348,7 +349,7 @@ fun CryptoStatsScreen(
             Column(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .background(Color(0xFF272727), RoundedCornerShape(16.dp)),
+                    .background(MaterialTheme.colorScheme.surface, RoundedCornerShape(16.dp)),
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
 
@@ -356,7 +357,7 @@ fun CryptoStatsScreen(
                     modifier = Modifier
                         .padding(vertical = 8.dp),
                     text = "Select Crypto",
-                    color = Color(0xFFFFFFFF),
+                    color = MaterialTheme.colorScheme.onBackground,
                     fontSize = 16.sp,
                     fontWeight = FontWeight(700)
                 )
@@ -392,7 +393,7 @@ fun CryptoStatsScreen(
 
                             Text(
                                 text = it.shortName,
-                                color = Color(0xFFFFFFFF)
+                                color = MaterialTheme.colorScheme.onBackground
                             )
                         }
 

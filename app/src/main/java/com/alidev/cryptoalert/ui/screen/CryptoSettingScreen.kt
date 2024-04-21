@@ -11,6 +11,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -42,14 +43,14 @@ fun CryptoSettingScreen(
             .fillMaxWidth()
             .padding(10.dp)
             .shadow(4.dp, RoundedCornerShape(12.dp))
-            .background(Color(0xFF272727), RoundedCornerShape(12.dp))
+            .background(MaterialTheme.colorScheme.surface, RoundedCornerShape(12.dp))
             .padding(16.dp),
         verticalArrangement = Arrangement.spacedBy(10.dp)
     ) {
 
         Text(
             text = "Destination Currency",
-            color = Color(0xFFFFFFFF),
+            color = MaterialTheme.colorScheme.onPrimary,
             fontSize = 16.sp,
             fontWeight = FontWeight(700)
         )
@@ -60,7 +61,7 @@ fun CryptoSettingScreen(
             horizontalArrangement = Arrangement.SpaceAround
         ) {
 
-            val usdtColor = if (selectedDstCurrency == "usdt") Color(0xFF9142FF) else Color(0xFF444444)
+            val usdtColor = if (selectedDstCurrency == "usdt") MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.onSurface
             Button(
                 modifier = Modifier
                     .height(42.dp),
@@ -80,7 +81,7 @@ fun CryptoSettingScreen(
                 )
             }
 
-            val tomanColor = if (selectedDstCurrency == "rls") Color(0xFF9142FF) else Color(0xFF444444)
+            val tomanColor = if (selectedDstCurrency == "rls") MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.onSurface
             Button(
                 modifier = Modifier
                     .height(42.dp),
@@ -109,7 +110,7 @@ fun CryptoSettingScreen(
                 .height(60.dp),
             shape = RoundedCornerShape(8.dp),
             colors = ButtonDefaults.buttonColors(
-                containerColor = Color(0xFF9142FF)
+                containerColor = MaterialTheme.colorScheme.primary
             ),
             onClick = {
                 onSaveClick(canSaveDstCurrency, selectedDstCurrency)
@@ -117,7 +118,7 @@ fun CryptoSettingScreen(
         ) {
             Text(
                 text = "Save Changes",
-                color = Color(0xFFFFFFFF),
+                color = MaterialTheme.colorScheme.onPrimary,
                 fontSize = 18.sp,
                 fontWeight = FontWeight(700)
             )

@@ -12,11 +12,11 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.ripple.rememberRipple
 import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -36,7 +36,7 @@ fun BottomTabBar(
             .fillMaxWidth()
             .height(60.dp)
             .background(
-                color = Color(0xFF9142FF),
+                color = MaterialTheme.colorScheme.primary,
                 shape = RoundedCornerShape(32.dp, 32.dp, 0.dp, 0.dp)
             ),
         verticalAlignment = Alignment.CenterVertically,
@@ -61,7 +61,7 @@ fun BottomTabBar(
                     .size(24.dp),
                 painter = painterResource(id = R.drawable.tools_icon),
                 contentDescription = "",
-                tint = if (selectedTabIndex == 0) Color(0xFF383636) else Color(0xFFFFFFFF)
+                tint = if (selectedTabIndex == 0) MaterialTheme.colorScheme.onPrimaryContainer else MaterialTheme.colorScheme.onPrimary
             )
         }
 
@@ -83,7 +83,7 @@ fun BottomTabBar(
                     .size(24.dp),
                 painter = painterResource(id = R.drawable.home_icon),
                 contentDescription = "",
-                tint = if (selectedTabIndex == 1) Color(0xFF383636) else Color(0xFFFFFFFF)
+                tint = if (selectedTabIndex == 1) MaterialTheme.colorScheme.onPrimaryContainer else MaterialTheme.colorScheme.onPrimary
             )
         }
 
@@ -105,7 +105,7 @@ fun BottomTabBar(
                     .size(24.dp),
                 painter = painterResource(id = R.drawable.notification_alert_icon),
                 contentDescription = "",
-                tint = if (selectedTabIndex == 2) Color(0xFF383636) else Color(0xFFFFFFFF)
+                tint = if (selectedTabIndex == 2) MaterialTheme.colorScheme.onPrimaryContainer else MaterialTheme.colorScheme.onPrimary
             )
         }
     }

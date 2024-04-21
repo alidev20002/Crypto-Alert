@@ -5,6 +5,7 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -12,7 +13,6 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.alidev.cryptoalert.ui.component.BottomTabBar
@@ -26,11 +26,13 @@ fun MainScreen(
     cryptos: List<Crypto>,
     cryptoConditions: List<CryptoCondition>,
     dstCurrency: String,
+    isDarkMode: Boolean,
     onAddConditionClick: (CryptoCondition) -> Unit,
     onRemoveConditionClick: (CryptoCondition) -> Unit,
     onStartServiceClick: () -> Unit,
     onStopServiceClick: () -> Unit,
     onSaveClick: (Boolean, String) -> Unit,
+    onChangeThemeClick: () -> Unit,
     modifier: Modifier = Modifier
 ) {
 
@@ -44,11 +46,14 @@ fun MainScreen(
         Column(
             modifier = Modifier
                 .fillMaxSize()
-                .background(Color(0xFF1E1E1E)),
+                .background(MaterialTheme.colorScheme.background),
             verticalArrangement = Arrangement.spacedBy(12.dp)
         ) {
 
-            Header()
+            Header(
+                isDarkMode = isDarkMode,
+                onChangeThemeClick = onChangeThemeClick
+            )
 
             when (selectedTabIndex) {
                 0 -> {
@@ -100,10 +105,12 @@ private fun MainScreenPreview() {
         cryptos = CryptoMarketViewModel.getListOfAvailableCryptos(),
         cryptoConditions = emptyList(),
         dstCurrency = "rls",
+        isDarkMode = false,
         onAddConditionClick = {},
         onStartServiceClick = {},
         onStopServiceClick = {},
         onRemoveConditionClick = {},
-        onSaveClick = { _, _ -> }
+        onSaveClick = { _, _ -> },
+        onChangeThemeClick = {}
     )
 }
