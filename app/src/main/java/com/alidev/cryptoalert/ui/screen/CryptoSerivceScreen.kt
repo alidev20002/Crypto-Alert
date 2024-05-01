@@ -124,13 +124,17 @@ fun CryptoServiceScreen(
             verticalArrangement = Arrangement.spacedBy(12.dp)
         ) {
 
+            item {
+                Spacer(modifier = Modifier.height(16.dp))
+            }
+
             items(conditions) {
                 
                 Row(
                     modifier = Modifier
                         .fillMaxWidth()
                         .shadow(
-                            elevation = 12.dp,
+                            elevation = 8.dp,
                             shape = RoundedCornerShape(12.dp),
                             ambientColor = Color(0xFF000000)
                         )
@@ -195,7 +199,7 @@ fun CryptoServiceScreen(
             }
 
             item {
-                Spacer(modifier = Modifier.height(52.dp))
+                Spacer(modifier = Modifier.height(62.dp))
             }
         }
     }
