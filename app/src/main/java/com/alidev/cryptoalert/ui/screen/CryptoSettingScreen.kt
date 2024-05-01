@@ -50,7 +50,7 @@ fun CryptoSettingScreen(
 
         Text(
             text = "Destination Currency",
-            color = MaterialTheme.colorScheme.onPrimary,
+            color = MaterialTheme.colorScheme.onBackground,
             fontSize = 16.sp,
             fontWeight = FontWeight(700)
         )
