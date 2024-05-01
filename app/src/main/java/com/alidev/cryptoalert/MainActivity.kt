@@ -3,6 +3,7 @@ package com.alidev.cryptoalert
 import android.content.pm.PackageManager
 import android.os.Build
 import android.os.Bundle
+import android.os.PowerManager
 import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.rememberLauncherForActivityResult
@@ -127,6 +128,15 @@ class MainActivity : ComponentActivity() {
     }
 
     private fun startService() {
+        val packageName = packageName
+        val pm = getSystemService(POWER_SERVICE) as PowerManager
+        if (!pm.isIgnoringBatteryOptimizations(packageName)) {
+            Toast.makeText(
+                this,
+                "Please turn off buttery optimization for this app to prevent stopping service!",
+                Toast.LENGTH_LONG
+            ).show()
+        }
         if (!CryptoAlertService.isServiceStarted) {
             CryptoAlertService.start(this)
         } else {
