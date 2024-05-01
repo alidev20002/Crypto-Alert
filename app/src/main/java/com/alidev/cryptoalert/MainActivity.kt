@@ -1,9 +1,13 @@
 package com.alidev.cryptoalert
 
+import android.content.pm.PackageManager
+import android.os.Build
 import android.os.Bundle
 import android.widget.Toast
 import androidx.activity.ComponentActivity
+import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.compose.setContent
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.MaterialTheme
@@ -14,6 +18,8 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
+import androidx.core.content.ContextCompat
 import com.alidev.cryptoalert.service.CryptoAlertService
 import com.alidev.cryptoalert.ui.screen.MainScreen
 import com.alidev.cryptoalert.ui.theme.CryptoAlertTheme
@@ -30,6 +36,16 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
+
+            val launcher = rememberLauncherForActivityResult(
+                ActivityResultContracts.RequestPermission()
+            ) { isGranted: Boolean ->
+                if (isGranted) {
+                    startService()
+                }
+            }
+
+            val context = LocalContext.current
 
             var isDarkMode by rememberSaveable {
                 mutableStateOf(false)
@@ -71,19 +87,24 @@ class MainActivity : ComponentActivity() {
                                     }
                                 },
                                 onStartServiceClick = {
-                                    if (!CryptoAlertService.isServiceStarted) {
-                                        CryptoAlertService.start(this)
+                                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                                        when (PackageManager.PERMISSION_GRANTED) {
+                                            ContextCompat.checkSelfPermission(
+                                                context,
+                                                android.Manifest.permission.POST_NOTIFICATIONS
+                                            ) -> {
+                                                startService()
+                                            }
+                                            else -> {
+                                                launcher.launch(android.Manifest.permission.POST_NOTIFICATIONS)
+                                            }
+                                        }
                                     }else {
-                                        Toast.makeText(this, "Service is running!", Toast.LENGTH_SHORT).show()
+                                        startService()
                                     }
-
                                 },
                                 onStopServiceClick = {
-                                    if (CryptoAlertService.isServiceStarted) {
-                                        CryptoAlertService.stop(this)
-                                    }else {
-                                        Toast.makeText(this, "Service is not running!", Toast.LENGTH_SHORT).show()
-                                    }
+                                    stopService()
                                 },
                                 onSaveClick = { canSave, currency ->
                                     if (canSave) {
@@ -102,6 +123,22 @@ class MainActivity : ComponentActivity() {
                     }
                 }
             }
+        }
+    }
+
+    private fun startService() {
+        if (!CryptoAlertService.isServiceStarted) {
+            CryptoAlertService.start(this)
+        } else {
+            Toast.makeText(this, "Service is running!", Toast.LENGTH_SHORT).show()
+        }
+    }
+
+    private fun stopService() {
+        if (CryptoAlertService.isServiceStarted) {
+            CryptoAlertService.stop(this)
+        } else {
+            Toast.makeText(this, "Service is not running!", Toast.LENGTH_SHORT).show()
         }
     }
 }
