@@ -29,6 +29,7 @@ import com.alidev.cryptoalert.R
 @Composable
 fun Header(
     isDarkMode: Boolean,
+    onSettingsClick: () -> Unit,
     onChangeThemeClick: () -> Unit,
     modifier: Modifier = Modifier
 ) {
@@ -51,7 +52,7 @@ fun Header(
                     interactionSource = MutableInteractionSource(),
                     indication = rememberRipple()
                 ) {
-
+                    onSettingsClick()
                 }
                 .padding(4.dp),
             painter = painterResource(id = R.drawable.setting_icon),
@@ -91,6 +92,7 @@ fun Header(
 private fun HeaderPreview() {
     Header(
         isDarkMode = false,
+        onSettingsClick = {},
         onChangeThemeClick = {}
     )
 }

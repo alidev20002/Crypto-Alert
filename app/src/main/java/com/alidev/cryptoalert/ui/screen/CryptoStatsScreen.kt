@@ -56,7 +56,7 @@ import com.alidev.cryptoalert.ui.model.Condition
 import com.alidev.cryptoalert.ui.model.Crypto
 import com.alidev.cryptoalert.ui.model.CryptoCondition
 import com.alidev.cryptoalert.ui.transformation.PriceVisualTransformation
-import com.alidev.cryptoalert.ui.viewmodel.stats.CryptoMarketViewModel
+import com.alidev.cryptoalert.ui.viewmodel.CryptoMarketViewModel
 import com.alidev.cryptoalert.utils.toFormattedPrice
 
 @OptIn(ExperimentalMaterial3Api::class)

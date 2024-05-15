@@ -19,12 +19,13 @@ import com.alidev.cryptoalert.ui.component.BottomTabBar
 import com.alidev.cryptoalert.ui.component.Header
 import com.alidev.cryptoalert.ui.model.Crypto
 import com.alidev.cryptoalert.ui.model.CryptoCondition
-import com.alidev.cryptoalert.ui.viewmodel.stats.CryptoMarketViewModel
+import com.alidev.cryptoalert.ui.viewmodel.CryptoMarketViewModel
 
 @Composable
 fun MainScreen(
     cryptos: List<Crypto>,
     cryptoConditions: List<CryptoCondition>,
+    indicators: Map<String, String>,
     dstCurrency: String,
     isDarkMode: Boolean,
     onAddConditionClick: (CryptoCondition) -> Unit,
@@ -33,6 +34,7 @@ fun MainScreen(
     onStopServiceClick: () -> Unit,
     onSaveClick: (Boolean, String) -> Unit,
     onChangeThemeClick: () -> Unit,
+    onSelectCrypto: (String) -> Unit,
     modifier: Modifier = Modifier
 ) {
 
@@ -52,15 +54,18 @@ fun MainScreen(
 
             Header(
                 isDarkMode = isDarkMode,
+                onSettingsClick = {
+                    selectedTabIndex = 3
+                },
                 onChangeThemeClick = onChangeThemeClick
             )
 
             when (selectedTabIndex) {
                 0 -> {
-                    CryptoSettingScreen(
-                        dstCurrency = dstCurrency,
-                        canSaveDstCurrency = cryptoConditions.isEmpty(),
-                        onSaveClick = onSaveClick
+                    CryptoIndicatorScreen(
+                        cryptos = cryptos,
+                        indicators = indicators,
+                        onSelectCrypto = onSelectCrypto
                     )
                 }
                 1 -> {
@@ -75,6 +80,13 @@ fun MainScreen(
                         onStartServiceClick = onStartServiceClick,
                         onStopServiceClick = onStopServiceClick,
                         onRemoveConditionClick = onRemoveConditionClick
+                    )
+                }
+                3 -> {
+                    CryptoSettingScreen(
+                        dstCurrency = dstCurrency,
+                        canSaveDstCurrency = cryptoConditions.isEmpty(),
+                        onSaveClick = onSaveClick
                     )
                 }
             }
@@ -104,6 +116,7 @@ private fun MainScreenPreview() {
     MainScreen(
         cryptos = CryptoMarketViewModel.getListOfAvailableCryptos(),
         cryptoConditions = emptyList(),
+        indicators = emptyMap(),
         dstCurrency = "rls",
         isDarkMode = false,
         onAddConditionClick = {},
@@ -111,6 +124,7 @@ private fun MainScreenPreview() {
         onStopServiceClick = {},
         onRemoveConditionClick = {},
         onSaveClick = { _, _ -> },
-        onChangeThemeClick = {}
+        onChangeThemeClick = {},
+        onSelectCrypto = {}
     )
 }

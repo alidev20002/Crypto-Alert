@@ -24,9 +24,9 @@ import androidx.core.content.ContextCompat
 import com.alidev.cryptoalert.service.CryptoAlertService
 import com.alidev.cryptoalert.ui.screen.MainScreen
 import com.alidev.cryptoalert.ui.theme.CryptoAlertTheme
-import com.alidev.cryptoalert.ui.viewmodel.stats.CryptoMarketState
-import com.alidev.cryptoalert.ui.viewmodel.stats.CryptoMarketViewModel
-import com.alidev.cryptoalert.ui.viewmodel.stats.EmptyMarketState
+import com.alidev.cryptoalert.ui.viewmodel.CryptoMarketState
+import com.alidev.cryptoalert.ui.viewmodel.CryptoMarketViewModel
+import com.alidev.cryptoalert.ui.viewmodel.EmptyMarketState
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -71,6 +71,7 @@ class MainActivity : ComponentActivity() {
                             MainScreen(
                                 cryptos = state.cryptos,
                                 cryptoConditions = state.cryptoConditions,
+                                indicators = state.indicators,
                                 dstCurrency = state.dstCurrency,
                                 isDarkMode = isDarkMode,
                                 onAddConditionClick = {
@@ -118,6 +119,11 @@ class MainActivity : ComponentActivity() {
                                 },
                                 onChangeThemeClick = {
                                     isDarkMode = !isDarkMode
+                                },
+                                onSelectCrypto = { cryptoName ->
+                                    viewModel.getIndicators(
+                                        symbol = "${cryptoName}USDT"
+                                    )
                                 }
                             )
                         }
