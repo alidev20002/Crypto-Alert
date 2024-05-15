@@ -120,7 +120,7 @@ fun CryptoServiceScreen(
         LazyColumn(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(horizontal = 8.dp),
+                .padding(horizontal = 16.dp),
             verticalArrangement = Arrangement.spacedBy(12.dp)
         ) {
 
@@ -134,7 +134,7 @@ fun CryptoServiceScreen(
                     modifier = Modifier
                         .fillMaxWidth()
                         .shadow(
-                            elevation = 8.dp,
+                            elevation = 4.dp,
                             shape = RoundedCornerShape(12.dp),
                             ambientColor = Color(0xFF000000)
                         )
