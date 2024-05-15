@@ -120,9 +120,10 @@ class MainActivity : ComponentActivity() {
                                 onChangeThemeClick = {
                                     isDarkMode = !isDarkMode
                                 },
-                                onSelectCrypto = { cryptoName ->
+                                onSelectCrypto = { source, symbol ->
                                     viewModel.getIndicators(
-                                        symbol = "${cryptoName}USDT"
+                                        source = source,
+                                        symbol = "${symbol}USDT"
                                     )
                                 }
                             )

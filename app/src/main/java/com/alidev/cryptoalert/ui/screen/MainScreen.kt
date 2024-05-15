@@ -34,7 +34,7 @@ fun MainScreen(
     onStopServiceClick: () -> Unit,
     onSaveClick: (Boolean, String) -> Unit,
     onChangeThemeClick: () -> Unit,
-    onSelectCrypto: (String) -> Unit,
+    onSelectCrypto: (String, String) -> Unit,
     modifier: Modifier = Modifier
 ) {
 
@@ -125,6 +125,6 @@ private fun MainScreenPreview() {
         onRemoveConditionClick = {},
         onSaveClick = { _, _ -> },
         onChangeThemeClick = {},
-        onSelectCrypto = {}
+        onSelectCrypto = { _, _ -> }
     )
 }

@@ -43,7 +43,7 @@ import com.alidev.cryptoalert.ui.model.Crypto
 fun CryptoIndicatorScreen(
     cryptos: List<Crypto>,
     indicators: Map<String, String>,
-    onSelectCrypto: (String) -> Unit,
+    onSelectCrypto: (source: String, symbol: String) -> Unit,
     modifier: Modifier = Modifier
 ) {
 
@@ -53,6 +53,10 @@ fun CryptoIndicatorScreen(
 
     var selectedCrypto by remember {
         mutableStateOf(cryptos[0])
+    }
+
+    var selectedSource by remember {
+        mutableStateOf("close")
     }
 
     Column(
@@ -94,6 +98,95 @@ fun CryptoIndicatorScreen(
                     color = MaterialTheme.colorScheme.onPrimary
                 )
             }
+        }
+
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(vertical = 4.dp),
+            horizontalArrangement = Arrangement.SpaceAround,
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+
+            val closeColor = if (selectedSource == "close")
+                MaterialTheme.colorScheme.primary
+            else
+                MaterialTheme.colorScheme.secondary
+            Text(
+                modifier = Modifier
+                    .clip(RoundedCornerShape(8.dp))
+                    .clickable(
+                        interactionSource = MutableInteractionSource(),
+                        indication = rememberRipple()
+                    ) {
+                        selectedSource = "close"
+                    }
+                    .padding(8.dp),
+                text = "CLOSE",
+                color = closeColor,
+                fontSize = 14.sp,
+                fontWeight = FontWeight(700)
+            )
+
+            val openColor = if (selectedSource == "open")
+                MaterialTheme.colorScheme.primary
+            else
+                MaterialTheme.colorScheme.secondary
+            Text(
+                modifier = Modifier
+                    .clip(RoundedCornerShape(8.dp))
+                    .clickable(
+                        interactionSource = MutableInteractionSource(),
+                        indication = rememberRipple()
+                    ) {
+                        selectedSource = "open"
+                    }
+                    .padding(8.dp),
+                text = "OPEN",
+                color = openColor,
+                fontSize = 14.sp,
+                fontWeight = FontWeight(700)
+            )
+
+            val highColor = if (selectedSource == "high")
+                MaterialTheme.colorScheme.primary
+            else
+                MaterialTheme.colorScheme.secondary
+            Text(
+                modifier = Modifier
+                    .clip(RoundedCornerShape(8.dp))
+                    .clickable(
+                        interactionSource = MutableInteractionSource(),
+                        indication = rememberRipple()
+                    ) {
+                        selectedSource = "high"
+                    }
+                    .padding(8.dp),
+                text = "HIGH",
+                color = highColor,
+                fontSize = 14.sp,
+                fontWeight = FontWeight(700)
+            )
+
+            val lowColor = if (selectedSource == "low")
+                MaterialTheme.colorScheme.primary
+            else
+                MaterialTheme.colorScheme.secondary
+            Text(
+                modifier = Modifier
+                    .clip(RoundedCornerShape(8.dp))
+                    .clickable(
+                        interactionSource = MutableInteractionSource(),
+                        indication = rememberRipple()
+                    ) {
+                        selectedSource = "low"
+                    }
+                    .padding(8.dp),
+                text = "LOW",
+                color = lowColor,
+                fontSize = 14.sp,
+                fontWeight = FontWeight(700)
+            )
         }
 
         LazyVerticalGrid(
@@ -168,9 +261,11 @@ fun CryptoIndicatorScreen(
                                     interactionSource = MutableInteractionSource(),
                                     indication = rememberRipple()
                                 ) {
-                                    selectedCrypto = it
-                                    expanded = false
-                                    onSelectCrypto(it.shortName)
+                                    if (it.shortName != "USDT") {
+                                        selectedCrypto = it
+                                        expanded = false
+                                        onSelectCrypto(selectedSource, it.shortName)
+                                    }
                                 }
                                 .padding(8.dp),
                             horizontalArrangement = Arrangement.spacedBy(10.dp),
