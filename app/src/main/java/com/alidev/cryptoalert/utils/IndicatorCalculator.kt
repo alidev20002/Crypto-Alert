@@ -1,4 +1,4 @@
-package com.alidev.cryptoalert.data.utils
+package com.alidev.cryptoalert.utils
 
 import kotlin.math.abs
 import kotlin.math.sqrt
