@@ -175,6 +175,7 @@ class CryptoAlertService : Service() {
                     conditionRepository.writeConditionsSync(conditions)
 
                     if (conditions.isEmpty()) {
+                        delay(DELAY_BETWEEN_REQUEST_MILLIS)
                         stopServiceJob()
                         return@launch
                     }
