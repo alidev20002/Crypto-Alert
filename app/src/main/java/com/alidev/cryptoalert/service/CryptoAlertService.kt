@@ -18,6 +18,7 @@ import androidx.core.app.NotificationCompat
 import androidx.core.content.ContextCompat
 import com.alidev.cryptoalert.MainActivity
 import com.alidev.cryptoalert.R
+import com.alidev.cryptoalert.data.api.getCryptoIcon
 import com.alidev.cryptoalert.data.repository.condition.ConditionRepository
 import com.alidev.cryptoalert.data.repository.dstcurrency.DstCurrencyRepository
 import com.alidev.cryptoalert.data.repository.stats.CryptoMarketRepository
@@ -65,7 +66,7 @@ class CryptoAlertService : Service() {
         val notification = createNotification(
             title = "Crypto Alert",
             message = "Price Checking...",
-            smallIcon = R.drawable.ic_launcher_foreground,
+            smallIcon = R.drawable.coin2,
             isOngoing = true
         )
 
@@ -157,7 +158,7 @@ class CryptoAlertService : Service() {
                                 val notification = createNotification(
                                     title = "Crypto Alert",
                                     message = "${cryptoCondition.crypto.shortName} is reached to $price",
-                                    smallIcon = R.drawable.ic_launcher_foreground,
+                                    smallIcon = getCryptoIcon(cryptoCondition.crypto.shortName),
                                     isOngoing = false
                                 )
 
