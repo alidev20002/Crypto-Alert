@@ -24,6 +24,7 @@ import com.alidev.cryptoalert.data.repository.dstcurrency.DstCurrencyRepository
 import com.alidev.cryptoalert.data.repository.stats.CryptoMarketRepository
 import com.alidev.cryptoalert.ui.model.Condition
 import com.alidev.cryptoalert.ui.model.CryptoCondition
+import com.alidev.cryptoalert.utils.toFormattedPrice
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
@@ -157,7 +158,7 @@ class CryptoAlertService : Service() {
                                 // create a notification with sound and vibration
                                 val notification = createNotification(
                                     title = "Crypto Alert",
-                                    message = "${cryptoCondition.crypto.shortName} is reached to $price",
+                                    message = "${cryptoCondition.crypto.shortName} is reached to ${price.toFormattedPrice()}",
                                     smallIcon = getCryptoIcon(cryptoCondition.crypto.shortName),
                                     isOngoing = false
                                 )
