@@ -151,7 +151,15 @@ class CryptoAlertService : Service() {
                     val okConditions = mutableListOf<CryptoCondition>()
 
                     conditions.forEach { cryptoCondition ->
-                        val price = stats["${cryptoCondition.crypto.shortName}-$destinationCurrency"]?.latest
+                        val cryptoStat =
+                            stats["${cryptoCondition.crypto.shortName}-$destinationCurrency"]?.latest
+
+                        val price = if (destinationCurrency == "rls") {
+                            String.format("%.0f", cryptoStat?.toFloat()?.div(10))
+                        } else{
+                            cryptoStat
+                        }
+
                         price?.let {
                             if (isConditionOk(price.toDouble(), cryptoCondition)) {
                                 okConditions.add(cryptoCondition)
