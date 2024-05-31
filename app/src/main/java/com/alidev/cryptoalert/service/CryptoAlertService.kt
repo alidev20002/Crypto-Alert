@@ -144,6 +144,9 @@ class CryptoAlertService : Service() {
 
                 delay(DELAY_BETWEEN_REQUEST_MILLIS)
 
+                if (ringtone.isPlaying)
+                    ringtone.stop()
+
                 try {
                     val market = cryptoMarketRepository.getStats(sourceCurrencies, destinationCurrency)
                     val stats = market.cryptoStats
