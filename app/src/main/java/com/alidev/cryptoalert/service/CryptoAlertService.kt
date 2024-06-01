@@ -18,11 +18,13 @@ import androidx.core.app.NotificationCompat
 import androidx.core.content.ContextCompat
 import com.alidev.cryptoalert.MainActivity
 import com.alidev.cryptoalert.R
+import com.alidev.cryptoalert.data.api.getCryptoIcon
 import com.alidev.cryptoalert.data.repository.condition.ConditionRepository
 import com.alidev.cryptoalert.data.repository.dstcurrency.DstCurrencyRepository
 import com.alidev.cryptoalert.data.repository.stats.CryptoMarketRepository
 import com.alidev.cryptoalert.ui.model.Condition
 import com.alidev.cryptoalert.ui.model.CryptoCondition
+import com.alidev.cryptoalert.utils.toFormattedPrice
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
@@ -65,7 +67,7 @@ class CryptoAlertService : Service() {
         val notification = createNotification(
             title = "Crypto Alert",
             message = "Price Checking...",
-            smallIcon = R.drawable.ic_launcher_foreground,
+            smallIcon = R.drawable.coin2,
             isOngoing = true
         )
 
@@ -139,6 +141,12 @@ class CryptoAlertService : Service() {
 
         serviceJob = GlobalScope.launch(Dispatchers.IO) {
             while (isServiceStarted) {
+
+                delay(DELAY_BETWEEN_REQUEST_MILLIS)
+
+                if (ringtone.isPlaying)
+                    ringtone.stop()
+
                 try {
                     val market = cryptoMarketRepository.getStats(sourceCurrencies, destinationCurrency)
                     val stats = market.cryptoStats
@@ -146,15 +154,23 @@ class CryptoAlertService : Service() {
                     val okConditions = mutableListOf<CryptoCondition>()
 
                     conditions.forEach { cryptoCondition ->
-                        val price = stats["${cryptoCondition.crypto.shortName}-$destinationCurrency"]?.latest
+                        val cryptoStat =
+                            stats["${cryptoCondition.crypto.shortName}-$destinationCurrency"]?.latest
+
+                        val price = if (destinationCurrency == "rls") {
+                            String.format("%.0f", cryptoStat?.toFloat()?.div(10))
+                        } else{
+                            cryptoStat
+                        }
+
                         price?.let {
                             if (isConditionOk(price.toDouble(), cryptoCondition)) {
                                 okConditions.add(cryptoCondition)
                                 // create a notification with sound and vibration
                                 val notification = createNotification(
                                     title = "Crypto Alert",
-                                    message = "${cryptoCondition.crypto.shortName} is reached to $price",
-                                    smallIcon = R.drawable.ic_launcher_foreground,
+                                    message = "${cryptoCondition.crypto.shortName} is reached to ${price.toFormattedPrice()}",
+                                    smallIcon = getCryptoIcon(cryptoCondition.crypto.shortName),
                                     isOngoing = false
                                 )
 
@@ -172,6 +188,7 @@ class CryptoAlertService : Service() {
                     conditionRepository.writeConditionsSync(conditions)
 
                     if (conditions.isEmpty()) {
+                        delay(DELAY_BETWEEN_REQUEST_MILLIS)
                         stopServiceJob()
                         return@launch
                     }
@@ -179,8 +196,6 @@ class CryptoAlertService : Service() {
                 }catch (e: Exception) {
                     Log.i("alitest", "startServiceJob: ${e.message}")
                 }
-
-                delay(DELAY_BETWEEN_REQUEST_MILLIS)
             }
         }
     }

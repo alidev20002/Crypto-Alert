@@ -9,19 +9,19 @@ data class Crypto(
     val shortName: String,
 
     @SerialName("lowPrice")
-    val lowPrice: String = "",
+    val lowPrice: String = "0.0",
 
     @SerialName("highPrice")
-    val highPrice: String = "",
+    val highPrice: String = "0.0",
 
     @SerialName("openPrice")
-    val openPrice: String = "",
+    val openPrice: String = "0.0",
 
     @SerialName("latestPrice")
-    val latestPrice: String = "",
+    val latestPrice: String = "0.0",
 
     @SerialName("change")
-    val change: String = "",
+    val change: String = "0.0",
 
     @SerialName("icon")
     val icon: Int

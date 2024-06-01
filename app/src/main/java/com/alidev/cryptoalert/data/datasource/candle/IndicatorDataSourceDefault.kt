@@ -1,6 +1,6 @@
 package com.alidev.cryptoalert.data.datasource.candle
 
-import com.alidev.cryptoalert.data.utils.IndicatorCalculator
+import com.alidev.cryptoalert.utils.IndicatorCalculator
 import javax.inject.Inject
 
 class IndicatorDataSourceDefault @Inject constructor(): IndicatorDataSource {

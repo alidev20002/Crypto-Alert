@@ -1,51 +1,32 @@
 package com.alidev.cryptoalert
 
+import android.content.pm.PackageManager
+import android.os.Build
 import android.os.Bundle
+import android.os.PowerManager
 import android.widget.Toast
 import androidx.activity.ComponentActivity
+import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.compose.setContent
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
-import androidx.compose.foundation.ExperimentalFoundationApi
-import androidx.compose.foundation.Image
-import androidx.compose.foundation.background
-import androidx.compose.foundation.combinedClickable
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.LazyRow
-import androidx.compose.foundation.lazy.items
-import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
-import androidx.compose.material3.Text
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.unit.dp
-import com.alidev.cryptoalert.data.api.getCryptoIcon
+import androidx.compose.ui.platform.LocalContext
+import androidx.core.content.ContextCompat
 import com.alidev.cryptoalert.service.CryptoAlertService
-import com.alidev.cryptoalert.ui.model.Condition
-import com.alidev.cryptoalert.ui.model.Crypto
-import com.alidev.cryptoalert.ui.model.CryptoCondition
+import com.alidev.cryptoalert.ui.screen.MainScreen
 import com.alidev.cryptoalert.ui.theme.CryptoAlertTheme
-import com.alidev.cryptoalert.ui.viewmodel.stats.CryptoMarketState
-import com.alidev.cryptoalert.ui.viewmodel.stats.CryptoMarketViewModel
-import com.alidev.cryptoalert.ui.viewmodel.stats.EmptyMarketState
+import com.alidev.cryptoalert.ui.viewmodel.CryptoMarketState
+import com.alidev.cryptoalert.ui.viewmodel.CryptoMarketViewModel
+import com.alidev.cryptoalert.ui.viewmodel.EmptyMarketState
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -53,185 +34,128 @@ class MainActivity : ComponentActivity() {
 
     private val viewModel by viewModels<CryptoMarketViewModel>()
 
-    @OptIn(ExperimentalFoundationApi::class)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
-            CryptoAlertTheme {
+
+            val launcher = rememberLauncherForActivityResult(
+                ActivityResultContracts.RequestPermission()
+            ) { isGranted: Boolean ->
+                if (isGranted) {
+                    startService()
+                }
+            }
+
+            val context = LocalContext.current
+
+            var isDarkMode by rememberSaveable {
+                mutableStateOf(false)
+            }
+
+            CryptoAlertTheme(
+                darkTheme = isDarkMode
+            ) {
                 // A surface container using the 'background' color from the theme
                 Surface(
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background
                 ) {
-                    var isEnabled by rememberSaveable {
-                        mutableStateOf(false)
-                    }
 
-                    var conditionId by rememberSaveable {
-                        mutableStateOf(1.0)
-                    }
+                    val state = viewModel.state.collectAsState().value
+                    when (state) {
+                        is EmptyMarketState -> {
 
-                    var isRial by rememberSaveable {
-                        mutableStateOf(true)
-                    }
-
-                    Column(
-                        modifier = Modifier.fillMaxSize(),
-                        horizontalAlignment = Alignment.CenterHorizontally,
-                        verticalArrangement = Arrangement.spacedBy(10.dp)
-                    ) {
-
-                        Button(
-                            enabled = isEnabled,
-                            onClick = {
-                                CryptoAlertService.start(this@MainActivity)
-                            }
-                        ) {
-                            Text(text = "Start Service")
                         }
 
-                        Button(
-                            enabled = isEnabled,
-                            onClick = {
-                                CryptoAlertService.stop(this@MainActivity)
-                            }
-                        ) {
-                            Text(text = "Stop Service")
-                        }
-
-                        val state = viewModel.state.collectAsState().value
-                        when (state) {
-                            is EmptyMarketState -> {
-                                Text(text = "No Condition yet!")
-                            }
-
-                            is CryptoMarketState -> {
-                                val conditions = state.cryptoConditions
-                                isEnabled = conditions.isNotEmpty()
-
-                                LazyColumn(
-                                    modifier = Modifier
-                                        .fillMaxWidth()
-                                        .height(250.dp)
-                                ) {
-                                    items(conditions) {
-                                        Row(
-                                            modifier = Modifier
-                                                .combinedClickable(
-                                                    onLongClick = {
-                                                        if (!CryptoAlertService.isServiceStarted) {
-                                                            viewModel.removeCondition(it)
-                                                        }else {
-                                                            Toast.makeText(this@MainActivity, "When Service is running, you cannot modify conditions!", Toast.LENGTH_SHORT).show()
-                                                        }
-                                                    },
-                                                    onClick = {}
-                                                ),
-                                            horizontalArrangement = Arrangement.spacedBy(3.dp)
-                                        ) {
-                                            Image(
-                                                painter = painterResource(id = it.crypto.icon),
-                                                contentDescription = "",
-                                                contentScale = ContentScale.FillBounds
-                                            )
-                                            Text(text = it.crypto.shortName)
-                                            Text(text = "${it.expectedPrice}")
-                                            Text(text = it.condition.name)
-                                        }
+                        is CryptoMarketState -> {
+                            MainScreen(
+                                cryptos = state.cryptos,
+                                cryptoConditions = state.cryptoConditions,
+                                indicators = state.indicators,
+                                dstCurrency = state.dstCurrency,
+                                isDarkMode = isDarkMode,
+                                onAddConditionClick = {
+                                    if (!CryptoAlertService.isServiceStarted) {
+                                        viewModel.addCondition(it)
+                                    }else {
+                                        Toast.makeText(this, "When Service is running, you cannot modify conditions!", Toast.LENGTH_SHORT).show()
                                     }
-                                }
-
-                                Button(
-                                    onClick = {
-                                        if (!CryptoAlertService.isServiceStarted) {
-                                            viewModel.addCondition(
-                                                CryptoCondition(
-                                                    Crypto(
-                                                        shortName = "btc",
-                                                        icon = getCryptoIcon("btc")
-                                                    ),
-                                                    40000000000.0 + conditionId * 1500000000,
-                                                    Condition.INCREASE
-                                                )
-                                            )
-                                            conditionId += 1.0
-                                        }else {
-                                            Toast.makeText(this@MainActivity, "When Service is running, you cannot modify conditions!", Toast.LENGTH_SHORT).show()
-                                        }
-
+                                },
+                                onRemoveConditionClick = {
+                                    if (!CryptoAlertService.isServiceStarted) {
+                                        viewModel.removeCondition(it)
+                                    }else {
+                                        Toast.makeText(this, "When Service is running, you cannot modify conditions!", Toast.LENGTH_SHORT).show()
                                     }
-                                ) {
-                                    Text(text = "Add new Condition")
-                                }
-                                
-                                Spacer(modifier = Modifier.height(20.dp))
-
-                                val stats = state.cryptos
-                                isRial = state.dstCurrency == "rls"
-
-                                Row {
-                                    Button(
-                                        colors = ButtonDefaults.buttonColors(
-                                            containerColor = if(isRial) Color.Cyan else Color.Red
-                                        ),
-                                        onClick = {
-                                            if (conditions.isEmpty()) {
-                                                viewModel.saveDstCurrency("usdt")
-                                                viewModel.syncCryptoStats("usdt")
-                                            }else {
-                                                Toast.makeText(this@MainActivity, "Please remove conditions first!", Toast.LENGTH_SHORT).show()
+                                },
+                                onStartServiceClick = {
+                                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                                        when (PackageManager.PERMISSION_GRANTED) {
+                                            ContextCompat.checkSelfPermission(
+                                                context,
+                                                android.Manifest.permission.POST_NOTIFICATIONS
+                                            ) -> {
+                                                startService()
                                             }
-
-                                        }
-                                    ) {
-                                        Text(text = "USDT")
-                                    }
-
-                                    Button(
-                                        colors = ButtonDefaults.buttonColors(
-                                            containerColor = if(!isRial) Color.Cyan else Color.Red
-                                        ),
-                                        onClick = {
-                                            if (conditions.isEmpty()) {
-                                                viewModel.saveDstCurrency("rls")
-                                                viewModel.syncCryptoStats("rls")
-                                            }else {
-                                                Toast.makeText(this@MainActivity, "Please remove conditions first!", Toast.LENGTH_SHORT).show()
+                                            else -> {
+                                                launcher.launch(android.Manifest.permission.POST_NOTIFICATIONS)
                                             }
                                         }
-                                    ) {
-                                        Text(text = "RLS")
+                                    }else {
+                                        startService()
                                     }
-                                }
-                                LazyRow(
-                                    modifier = Modifier
-                                        .fillMaxWidth()
-                                        .height(250.dp),
-                                    horizontalArrangement = Arrangement.spacedBy(10.dp)
-                                ) {
-                                    
-                                    items(stats) {
-                                        Column(
-                                            modifier = Modifier
-                                                .background(Color.Gray, RoundedCornerShape(15.dp))
-                                                .padding(8.dp),
-                                            horizontalAlignment = Alignment.CenterHorizontally
-                                        ) {
-                                            Image(
-                                                painter = painterResource(id = it.icon),
-                                                contentDescription = "",
-                                                contentScale = ContentScale.FillBounds
-                                            )
-                                            Text(text = it.latestPrice)
-                                            Text(text = it.shortName)
-                                        }
+                                },
+                                onStopServiceClick = {
+                                    stopService()
+                                },
+                                onSaveClick = { canSave, currency ->
+                                    if (canSave) {
+                                        viewModel.saveDstCurrency(currency)
+                                        viewModel.syncCryptoStats(currency)
+                                        Toast.makeText(this, "Changes Saved Successfully!!", Toast.LENGTH_SHORT).show()
+                                    }else{
+                                        Toast.makeText(this, "First remove old conditions!", Toast.LENGTH_SHORT).show()
                                     }
+                                },
+                                onChangeThemeClick = {
+                                    isDarkMode = !isDarkMode
+                                },
+                                onSelectCrypto = { source, symbol ->
+                                    viewModel.getIndicators(
+                                        source = source,
+                                        symbol = "${symbol}USDT"
+                                    )
                                 }
-                            }
+                            )
                         }
                     }
                 }
             }
+        }
+    }
+
+    private fun startService() {
+        val packageName = packageName
+        val pm = getSystemService(POWER_SERVICE) as PowerManager
+        if (!pm.isIgnoringBatteryOptimizations(packageName)) {
+            Toast.makeText(
+                this,
+                "Please turn off buttery optimization for this app to prevent stopping service!",
+                Toast.LENGTH_LONG
+            ).show()
+        }
+        if (!CryptoAlertService.isServiceStarted) {
+            CryptoAlertService.start(this)
+        } else {
+            Toast.makeText(this, "Service is running!", Toast.LENGTH_SHORT).show()
+        }
+    }
+
+    private fun stopService() {
+        if (CryptoAlertService.isServiceStarted) {
+            CryptoAlertService.stop(this)
+        } else {
+            Toast.makeText(this, "Service is not running!", Toast.LENGTH_SHORT).show()
         }
     }
 }
