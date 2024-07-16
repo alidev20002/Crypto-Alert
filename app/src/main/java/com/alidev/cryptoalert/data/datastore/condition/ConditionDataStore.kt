@@ -1,4 +1,4 @@
-package com.alidev.cryptoalert.data.datastore
+package com.alidev.cryptoalert.data.datastore.condition
 
 import kotlinx.coroutines.flow.Flow
 
