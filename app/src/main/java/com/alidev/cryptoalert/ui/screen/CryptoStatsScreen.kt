@@ -31,6 +31,7 @@ import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -81,6 +82,12 @@ fun CryptoStatsScreen(
 
     var condition by remember {
         mutableStateOf(Condition.INCREASE)
+    }
+
+    LaunchedEffect(cryptos) {
+        val shouldUpdateExpectedPrice = expectedPrice == "0.0"
+        if (shouldUpdateExpectedPrice)
+            expectedPrice = cryptos[0].latestPrice
     }
 
     Column(
