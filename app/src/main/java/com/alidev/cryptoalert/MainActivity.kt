@@ -13,6 +13,7 @@ import androidx.activity.viewModels
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
+import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -20,6 +21,8 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalLayoutDirection
+import androidx.compose.ui.unit.LayoutDirection
 import androidx.core.content.ContextCompat
 import com.alidev.cryptoalert.service.CryptoAlertService
 import com.alidev.cryptoalert.ui.screen.MainScreen
@@ -68,65 +71,67 @@ class MainActivity : ComponentActivity() {
                         }
 
                         is CryptoMarketState -> {
-                            MainScreen(
-                                cryptos = state.cryptos,
-                                cryptoConditions = state.cryptoConditions,
-                                indicators = state.indicators,
-                                dstCurrency = state.dstCurrency,
-                                isDarkMode = isDarkMode,
-                                onAddConditionClick = {
-                                    if (!CryptoAlertService.isServiceStarted) {
-                                        viewModel.addCondition(it)
-                                    }else {
-                                        Toast.makeText(this, "When Service is running, you cannot modify conditions!", Toast.LENGTH_SHORT).show()
-                                    }
-                                },
-                                onRemoveConditionClick = {
-                                    if (!CryptoAlertService.isServiceStarted) {
-                                        viewModel.removeCondition(it)
-                                    }else {
-                                        Toast.makeText(this, "When Service is running, you cannot modify conditions!", Toast.LENGTH_SHORT).show()
-                                    }
-                                },
-                                onStartServiceClick = {
-                                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-                                        when (PackageManager.PERMISSION_GRANTED) {
-                                            ContextCompat.checkSelfPermission(
-                                                context,
-                                                android.Manifest.permission.POST_NOTIFICATIONS
-                                            ) -> {
-                                                startService()
-                                            }
-                                            else -> {
-                                                launcher.launch(android.Manifest.permission.POST_NOTIFICATIONS)
-                                            }
+                            CompositionLocalProvider(LocalLayoutDirection provides LayoutDirection.Ltr) {
+                                MainScreen(
+                                    cryptos = state.cryptos,
+                                    cryptoConditions = state.cryptoConditions,
+                                    indicators = state.indicators,
+                                    dstCurrency = state.dstCurrency,
+                                    isDarkMode = isDarkMode,
+                                    onAddConditionClick = {
+                                        if (!CryptoAlertService.isServiceStarted) {
+                                            viewModel.addCondition(it)
+                                        }else {
+                                            Toast.makeText(this, "When Service is running, you cannot modify conditions!", Toast.LENGTH_SHORT).show()
                                         }
-                                    }else {
-                                        startService()
+                                    },
+                                    onRemoveConditionClick = {
+                                        if (!CryptoAlertService.isServiceStarted) {
+                                            viewModel.removeCondition(it)
+                                        }else {
+                                            Toast.makeText(this, "When Service is running, you cannot modify conditions!", Toast.LENGTH_SHORT).show()
+                                        }
+                                    },
+                                    onStartServiceClick = {
+                                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                                            when (PackageManager.PERMISSION_GRANTED) {
+                                                ContextCompat.checkSelfPermission(
+                                                    context,
+                                                    android.Manifest.permission.POST_NOTIFICATIONS
+                                                ) -> {
+                                                    startService()
+                                                }
+                                                else -> {
+                                                    launcher.launch(android.Manifest.permission.POST_NOTIFICATIONS)
+                                                }
+                                            }
+                                        }else {
+                                            startService()
+                                        }
+                                    },
+                                    onStopServiceClick = {
+                                        stopService()
+                                    },
+                                    onSaveClick = { canSave, currency ->
+                                        if (canSave) {
+                                            viewModel.saveDstCurrency(currency)
+                                            viewModel.syncCryptoStats(currency)
+                                            Toast.makeText(this, "Changes Saved Successfully!!", Toast.LENGTH_SHORT).show()
+                                        }else{
+                                            Toast.makeText(this, "First remove old conditions!", Toast.LENGTH_SHORT).show()
+                                        }
+                                    },
+                                    onChangeThemeClick = {
+                                        isDarkMode = !isDarkMode
+                                    },
+                                    onSelectCrypto = { source, symbol ->
+                                        viewModel.getIndicators(
+                                            source = source,
+                                            symbol = "${symbol}USDT"
+                                        )
                                     }
-                                },
-                                onStopServiceClick = {
-                                    stopService()
-                                },
-                                onSaveClick = { canSave, currency ->
-                                    if (canSave) {
-                                        viewModel.saveDstCurrency(currency)
-                                        viewModel.syncCryptoStats(currency)
-                                        Toast.makeText(this, "Changes Saved Successfully!!", Toast.LENGTH_SHORT).show()
-                                    }else{
-                                        Toast.makeText(this, "First remove old conditions!", Toast.LENGTH_SHORT).show()
-                                    }
-                                },
-                                onChangeThemeClick = {
-                                    isDarkMode = !isDarkMode
-                                },
-                                onSelectCrypto = { source, symbol ->
-                                    viewModel.getIndicators(
-                                        source = source,
-                                        symbol = "${symbol}USDT"
-                                    )
-                                }
-                            )
+                                )
+                            }
                         }
                     }
                 }
