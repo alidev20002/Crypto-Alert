@@ -1,6 +1,6 @@
 package com.alidev.cryptoalert.data.datasource.condition
 
-import com.alidev.cryptoalert.data.datastore.ConditionDataStore
+import com.alidev.cryptoalert.data.datastore.condition.ConditionDataStore
 import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 

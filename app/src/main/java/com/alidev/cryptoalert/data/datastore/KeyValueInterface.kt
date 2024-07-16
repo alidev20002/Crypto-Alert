@@ -12,4 +12,8 @@ interface KeyValueInterface {
 
     fun writeStringSync(key: String, value: String)
 
+    fun readBoolean(key: String): Flow<Boolean?>
+
+    suspend fun writeBoolean(key: String, value: Boolean)
+
 }

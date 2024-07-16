@@ -1,6 +1,6 @@
 package com.alidev.cryptoalert.data.datasource.dstcurrency
 
-import com.alidev.cryptoalert.data.datastore.DstCurrencyDataStore
+import com.alidev.cryptoalert.data.datastore.dstcurrency.DstCurrencyDataStore
 import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 

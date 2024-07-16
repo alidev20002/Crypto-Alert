@@ -1,6 +1,7 @@
-package com.alidev.cryptoalert.data.datastore
+package com.alidev.cryptoalert.data.datastore.condition
 
 import android.content.Context
+import com.alidev.cryptoalert.data.datastore.KeyValueBase
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject

@@ -10,6 +10,8 @@ import com.alidev.cryptoalert.data.repository.dstcurrency.DstCurrencyRepository
 import com.alidev.cryptoalert.data.repository.dstcurrency.DstCurrencyRepositoryDefault
 import com.alidev.cryptoalert.data.repository.stats.CryptoMarketRepository
 import com.alidev.cryptoalert.data.repository.stats.CryptoMarketRepositoryDefault
+import com.alidev.cryptoalert.data.repository.theme.ThemeRepository
+import com.alidev.cryptoalert.data.repository.theme.ThemeRepositoryDefault
 import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn
@@ -49,4 +51,10 @@ interface RepositoryModule {
     fun bindCryptoCandlesRepository(
         repository: CryptoCandlesRepositoryDefault
     ): CryptoCandlesRepository
+
+    @Binds
+    @Singleton
+    fun bindCThemeRepository(
+        repository: ThemeRepositoryDefault
+    ): ThemeRepository
 }

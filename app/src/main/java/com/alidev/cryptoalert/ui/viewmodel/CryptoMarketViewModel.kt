@@ -10,6 +10,7 @@ import com.alidev.cryptoalert.data.repository.candle.IndicatorRepository
 import com.alidev.cryptoalert.data.repository.condition.ConditionRepository
 import com.alidev.cryptoalert.data.repository.dstcurrency.DstCurrencyRepository
 import com.alidev.cryptoalert.data.repository.stats.CryptoMarketRepository
+import com.alidev.cryptoalert.data.repository.theme.ThemeRepository
 import com.alidev.cryptoalert.ui.model.Crypto
 import com.alidev.cryptoalert.ui.model.CryptoCondition
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -27,7 +28,8 @@ class CryptoMarketViewModel @Inject constructor(
     private val cryptoMarketRepository: CryptoMarketRepository,
     private val dstCurrencyRepository: DstCurrencyRepository,
     private val cryptoCandlesRepository: CryptoCandlesRepository,
-    private val indicatorRepository: IndicatorRepository
+    private val indicatorRepository: IndicatorRepository,
+    private val themeRepository: ThemeRepository
 ) : ViewModel() {
 
     private val cryptoConditionsAsFlow = conditionRepository.readConditions()
@@ -39,6 +41,9 @@ class CryptoMarketViewModel @Inject constructor(
     private val dstCurrencyAsFlow = dstCurrencyRepository.readDstCurrency()
 
     private val indicatorStateAsFlow = MutableStateFlow(IndicatorDataState())
+
+    val isDarkMode = themeRepository.readTheme()
+        .stateIn(viewModelScope, SharingStarted.WhileSubscribed(), false)
 
     val state: StateFlow<MarketState> = combine(
         cryptoConditionsAsFlow,
@@ -140,6 +145,12 @@ class CryptoMarketViewModel @Inject constructor(
                     macd = String.format("%.2f", macd)
                 )
             )
+        }
+    }
+
+    fun setTheme(isDarkMode: Boolean) {
+        viewModelScope.launch {
+            themeRepository.writeTheme(isDarkMode)
         }
     }
 

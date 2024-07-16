@@ -10,6 +10,8 @@ import com.alidev.cryptoalert.data.datasource.dstcurrency.DstCurrencyDataSource
 import com.alidev.cryptoalert.data.datasource.dstcurrency.DstCurrencyDataSourceDefault
 import com.alidev.cryptoalert.data.datasource.stats.CryptoMarketDataSource
 import com.alidev.cryptoalert.data.datasource.stats.CryptoMarketDataSourceDefault
+import com.alidev.cryptoalert.data.datasource.theme.ThemeDataSource
+import com.alidev.cryptoalert.data.datasource.theme.ThemeDataSourceDefault
 import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn
@@ -49,4 +51,10 @@ interface DataSourceModule {
     fun bindCryptoCandlesDataSource(
         dataSource: CryptoCandlesDataSourceDefault
     ): CryptoCandlesDataSource
+
+    @Binds
+    @Singleton
+    fun bindThemeDataSource(
+        dataSource: ThemeDataSourceDefault
+    ): ThemeDataSource
 }

@@ -1,4 +1,4 @@
-package com.alidev.cryptoalert.data.datastore
+package com.alidev.cryptoalert.data.datastore.dstcurrency
 
 import kotlinx.coroutines.flow.Flow
 
