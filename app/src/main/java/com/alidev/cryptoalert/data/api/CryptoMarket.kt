@@ -15,7 +15,7 @@ fun CryptoMarket.toCryptoList(dstCurrency: String): List<Crypto> {
         val shortName = it.key.split("-")[0]
 
         val latestPrice = if (dstCurrency == "rls") {
-                String.format("%.0f", it.value.latest.toFloat() / 10)
+                it.value.latest.substring(0, it.value.latest.length - 1)
             } else{
                 it.value.latest
             }
