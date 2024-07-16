@@ -15,10 +15,6 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.saveable.rememberSaveable
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalLayoutDirection
@@ -51,9 +47,7 @@ class MainActivity : ComponentActivity() {
 
             val context = LocalContext.current
 
-            var isDarkMode by rememberSaveable {
-                mutableStateOf(false)
-            }
+            val isDarkMode = viewModel.isDarkMode.collectAsState().value
 
             CryptoAlertTheme(
                 darkTheme = isDarkMode
@@ -122,7 +116,7 @@ class MainActivity : ComponentActivity() {
                                         }
                                     },
                                     onChangeThemeClick = {
-                                        isDarkMode = !isDarkMode
+                                        viewModel.setTheme(!isDarkMode)
                                     },
                                     onSelectCrypto = { source, symbol ->
                                         viewModel.getIndicators(
