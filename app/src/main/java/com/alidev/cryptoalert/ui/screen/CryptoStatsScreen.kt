@@ -275,18 +275,35 @@ fun CryptoStatsScreen(
                 horizontalArrangement = Arrangement.Center
             ) {
 
-                val increaseBackgroundColor = if (condition == Condition.INCREASE)
-                    MaterialTheme.colorScheme.primary
-                else
-                    MaterialTheme.colorScheme.secondary
-
                 val decreaseBackgroundColor = if (condition == Condition.INCREASE)
                     MaterialTheme.colorScheme.secondary
                 else
                     MaterialTheme.colorScheme.primary
 
+                val increaseBackgroundColor = if (condition == Condition.INCREASE)
+                    MaterialTheme.colorScheme.primary
+                else
+                    MaterialTheme.colorScheme.secondary
+
                 Button(
                     shape = RoundedCornerShape(16.dp, 0.dp, 0.dp, 16.dp),
+                    colors = ButtonDefaults.buttonColors(
+                        containerColor = decreaseBackgroundColor
+                    ),
+                    onClick = {
+                        condition = Condition.DECREASE
+                    }
+                ) {
+                    Text(
+                        text = "Decrease",
+                        color = MaterialTheme.colorScheme.onPrimary,
+                        fontSize = 18.sp,
+                        fontWeight = FontWeight(700)
+                    )
+                }
+
+                Button(
+                    shape = RoundedCornerShape(0.dp, 16.dp, 16.dp, 0.dp),
                     colors = ButtonDefaults.buttonColors(
                         containerColor = increaseBackgroundColor
                     ),
@@ -297,23 +314,6 @@ fun CryptoStatsScreen(
 
                     Text(
                         text = "Increase",
-                        color = MaterialTheme.colorScheme.onPrimary,
-                        fontSize = 18.sp,
-                        fontWeight = FontWeight(700)
-                    )
-                }
-
-                Button(
-                    shape = RoundedCornerShape(0.dp, 16.dp, 16.dp, 0.dp),
-                    colors = ButtonDefaults.buttonColors(
-                        containerColor = decreaseBackgroundColor
-                    ),
-                    onClick = {
-                        condition = Condition.DECREASE
-                    }
-                ) {
-                    Text(
-                        text = "Decrease",
                         color = MaterialTheme.colorScheme.onPrimary,
                         fontSize = 18.sp,
                         fontWeight = FontWeight(700)
