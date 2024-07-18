@@ -234,7 +234,7 @@ class CryptoAlertService : Service() {
         return RingtoneManager.getActualDefaultRingtoneUri(
             this,
             RingtoneManager.TYPE_ALARM
-        ) ?: Uri.parse("android.resource://$packageName/${R.raw.kaptainpolka}")
+        ) ?: Uri.parse("android.resource://$packageName/${R.raw.alarm}")
     }
 
     companion object {
