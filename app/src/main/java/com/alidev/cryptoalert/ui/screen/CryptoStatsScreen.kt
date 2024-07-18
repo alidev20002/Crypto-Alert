@@ -146,6 +146,8 @@ fun CryptoStatsScreen(
                     Spacer(modifier = Modifier.height(20.dp))
 
                     Image(
+                        modifier = Modifier
+                            .size(36.dp),
                         painter = painterResource(id = it.icon),
                         contentDescription = "",
                         contentScale = ContentScale.FillBounds
@@ -187,6 +189,8 @@ fun CryptoStatsScreen(
                 ) {
 
                     Image(
+                        modifier = Modifier
+                            .size(36.dp),
                         painter = painterResource(id = selectedCrypto.icon),
                         contentDescription = "",
                         contentScale = ContentScale.FillBounds
@@ -393,6 +397,8 @@ fun CryptoStatsScreen(
                         ) {
 
                             Image(
+                                modifier = Modifier
+                                    .size(48.dp),
                                 painter = painterResource(id = it.icon),
                                 contentDescription = "",
                                 contentScale = ContentScale.FillBounds
