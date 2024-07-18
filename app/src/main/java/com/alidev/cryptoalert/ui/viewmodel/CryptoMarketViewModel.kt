@@ -164,8 +164,9 @@ class CryptoMarketViewModel @Inject constructor(
     }
 
     companion object {
-        private const val SRC_CURRENCIES = "btc,eth,ltc,usdt,xrp,bch,bnb,eos,xlm,etc," +
-                "trx,doge,uni,dai,link,dot,aave,ada,shib"
+        private const val SRC_CURRENCIES = "btc,eth,ltc,usdt,xrp,bch,bnb,eos,xlm,etc,trx,doge,uni,dai," +
+                "link,dot,aave,ada,shib,ftm,matic,axs,mana,sand,avax,mkr,gmt,usdc,sol,near,ape,qnt,apt," +
+                "sushi,one,dao,ton,not,meme"
 
         fun getListOfAvailableCryptos(): List<Crypto> {
             return SRC_CURRENCIES.split(",").map {
