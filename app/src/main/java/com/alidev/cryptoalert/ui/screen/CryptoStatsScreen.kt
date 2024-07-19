@@ -237,9 +237,11 @@ fun CryptoStatsScreen(
                                 interactionSource = MutableInteractionSource(),
                                 indication = rememberRipple()
                             ) {
-                                expectedPrice = (expectedPrice.toDouble() - 100)
-                                    .toBigDecimal()
-                                    .toPlainString()
+                                if (expectedPrice.toDouble() >= 100) {
+                                    expectedPrice = (expectedPrice.toDouble() - 100)
+                                        .toBigDecimal()
+                                        .toPlainString()
+                                }
                             }
                             .padding(8.dp),
                         painter = painterResource(id = R.drawable.minus_icon),
