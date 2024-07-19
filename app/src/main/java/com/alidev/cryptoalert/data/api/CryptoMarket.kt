@@ -36,20 +36,40 @@ fun getCryptoIcon(shortName: String): Int {
     return when(shortName) {
         "aave" -> R.drawable.aave
         "ada" -> R.drawable.ada
+        "ape" -> R.drawable.ape
+        "apt" -> R.drawable.apt
+        "avax" -> R.drawable.avax
+        "axs" -> R.drawable.axs
         "bch" -> R.drawable.bch
         "bnb" -> R.drawable.bnb
         "btc" -> R.drawable.btc
         "dai" -> R.drawable.dai
+        "dao" -> R.drawable.dao
         "doge" -> R.drawable.doge
         "dot" -> R.drawable.dot
         "eos" -> R.drawable.eos
         "etc" -> R.drawable.etc
         "eth" -> R.drawable.eth
+        "ftm" -> R.drawable.ftm
+        "gmt" -> R.drawable.gmt
         "link" -> R.drawable.link
         "ltc" -> R.drawable.ltc
+        "mana" -> R.drawable.mana
+        "matic" -> R.drawable.matic
+        "meme" -> R.drawable.meme
+        "mkr" -> R.drawable.mkr
+        "near" -> R.drawable.near
+        "not" -> R.drawable.not
+        "one" -> R.drawable.one
+        "qnt" -> R.drawable.qnt
+        "sand" -> R.drawable.sand
         "shib" -> R.drawable.shib
+        "sol" -> R.drawable.sol
+        "sushi" -> R.drawable.sushi
+        "ton" -> R.drawable.ton
         "trx" -> R.drawable.trx
         "uni" -> R.drawable.uni
+        "usdc" -> R.drawable.usdc
         "usdt" -> R.drawable.usdt
         "xlm" -> R.drawable.xlm
         "xrp" -> R.drawable.xrp

@@ -11,6 +11,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
@@ -88,6 +89,8 @@ fun CryptoIndicatorScreen(
             ) {
 
                 Image(
+                    modifier = Modifier
+                        .size(36.dp),
                     painter = painterResource(id = selectedCrypto.icon),
                     contentDescription = "",
                     contentScale = ContentScale.FillBounds
@@ -273,6 +276,8 @@ fun CryptoIndicatorScreen(
                         ) {
 
                             Image(
+                                modifier = Modifier
+                                    .size(48.dp),
                                 painter = painterResource(id = it.icon),
                                 contentDescription = "",
                                 contentScale = ContentScale.FillBounds

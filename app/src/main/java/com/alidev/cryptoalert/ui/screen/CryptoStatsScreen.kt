@@ -146,6 +146,8 @@ fun CryptoStatsScreen(
                     Spacer(modifier = Modifier.height(20.dp))
 
                     Image(
+                        modifier = Modifier
+                            .size(36.dp),
                         painter = painterResource(id = it.icon),
                         contentDescription = "",
                         contentScale = ContentScale.FillBounds
@@ -187,6 +189,8 @@ fun CryptoStatsScreen(
                 ) {
 
                     Image(
+                        modifier = Modifier
+                            .size(36.dp),
                         painter = painterResource(id = selectedCrypto.icon),
                         contentDescription = "",
                         contentScale = ContentScale.FillBounds
@@ -271,18 +275,35 @@ fun CryptoStatsScreen(
                 horizontalArrangement = Arrangement.Center
             ) {
 
-                val increaseBackgroundColor = if (condition == Condition.INCREASE)
-                    MaterialTheme.colorScheme.primary
-                else
-                    MaterialTheme.colorScheme.secondary
-
                 val decreaseBackgroundColor = if (condition == Condition.INCREASE)
                     MaterialTheme.colorScheme.secondary
                 else
                     MaterialTheme.colorScheme.primary
 
+                val increaseBackgroundColor = if (condition == Condition.INCREASE)
+                    MaterialTheme.colorScheme.primary
+                else
+                    MaterialTheme.colorScheme.secondary
+
                 Button(
                     shape = RoundedCornerShape(16.dp, 0.dp, 0.dp, 16.dp),
+                    colors = ButtonDefaults.buttonColors(
+                        containerColor = decreaseBackgroundColor
+                    ),
+                    onClick = {
+                        condition = Condition.DECREASE
+                    }
+                ) {
+                    Text(
+                        text = "Decrease",
+                        color = MaterialTheme.colorScheme.onPrimary,
+                        fontSize = 18.sp,
+                        fontWeight = FontWeight(700)
+                    )
+                }
+
+                Button(
+                    shape = RoundedCornerShape(0.dp, 16.dp, 16.dp, 0.dp),
                     colors = ButtonDefaults.buttonColors(
                         containerColor = increaseBackgroundColor
                     ),
@@ -293,23 +314,6 @@ fun CryptoStatsScreen(
 
                     Text(
                         text = "Increase",
-                        color = MaterialTheme.colorScheme.onPrimary,
-                        fontSize = 18.sp,
-                        fontWeight = FontWeight(700)
-                    )
-                }
-
-                Button(
-                    shape = RoundedCornerShape(0.dp, 16.dp, 16.dp, 0.dp),
-                    colors = ButtonDefaults.buttonColors(
-                        containerColor = decreaseBackgroundColor
-                    ),
-                    onClick = {
-                        condition = Condition.DECREASE
-                    }
-                ) {
-                    Text(
-                        text = "Decrease",
                         color = MaterialTheme.colorScheme.onPrimary,
                         fontSize = 18.sp,
                         fontWeight = FontWeight(700)
@@ -393,6 +397,8 @@ fun CryptoStatsScreen(
                         ) {
 
                             Image(
+                                modifier = Modifier
+                                    .size(48.dp),
                                 painter = painterResource(id = it.icon),
                                 contentDescription = "",
                                 contentScale = ContentScale.FillBounds
