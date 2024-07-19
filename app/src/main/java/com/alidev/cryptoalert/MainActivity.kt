@@ -75,6 +75,7 @@ class MainActivity : ComponentActivity() {
                                     onAddConditionClick = {
                                         if (!CryptoAlertService.isServiceStarted) {
                                             viewModel.addCondition(it)
+                                            Toast.makeText(this, "Condition added successfully!", Toast.LENGTH_SHORT).show()
                                         }else {
                                             Toast.makeText(this, "When Service is running, you cannot modify conditions!", Toast.LENGTH_SHORT).show()
                                         }
@@ -82,6 +83,7 @@ class MainActivity : ComponentActivity() {
                                     onRemoveConditionClick = {
                                         if (!CryptoAlertService.isServiceStarted) {
                                             viewModel.removeCondition(it)
+                                            Toast.makeText(this, "Condition removed successfully!", Toast.LENGTH_SHORT).show()
                                         }else {
                                             Toast.makeText(this, "When Service is running, you cannot modify conditions!", Toast.LENGTH_SHORT).show()
                                         }
