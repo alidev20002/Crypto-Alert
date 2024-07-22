@@ -119,32 +119,36 @@ class CryptoMarketViewModel @Inject constructor(
         signalPeriod: Int = 9
     ) {
         viewModelScope.launch {
-            val currentTime = System.currentTimeMillis() / 1000
-            val startTime = currentTime - (numberOfCandles * 3600)
-            val candles = cryptoCandlesRepository.getCandles(symbol, resolution, startTime, currentTime)
-            val sourceCandles = when (source) {
-                "close" -> candles.close
-                "open" -> candles.open
-                "high" -> candles.high
-                "low" -> candles.low
-                else -> candles.close
-            }
-            val sma = indicatorRepository.sma(sourceCandles, period)
-            val ema = indicatorRepository.ema(sourceCandles, period)
-            val wma = indicatorRepository.wma(sourceCandles, period)
-            val hma = indicatorRepository.hma(sourceCandles, period)
-            val rsi = indicatorRepository.rsi(sourceCandles, period)
-            val macd = indicatorRepository.macd(sourceCandles, shortPeriod, longPeriod, signalPeriod)
-            indicatorStateAsFlow.emit(
-                IndicatorDataState(
-                    sma = String.format("%.2f", sma),
-                    ema = String.format("%.2f", ema),
-                    wma = String.format("%.2f", wma),
-                    hma = String.format("%.2f", hma),
-                    rsi = String.format("%.2f", rsi),
-                    macd = String.format("%.2f", macd)
+            try {
+                val currentTime = System.currentTimeMillis() / 1000
+                val startTime = currentTime - (numberOfCandles * 3600)
+                val candles = cryptoCandlesRepository.getCandles(symbol, resolution, startTime, currentTime)
+                val sourceCandles = when (source) {
+                    "close" -> candles.close
+                    "open" -> candles.open
+                    "high" -> candles.high
+                    "low" -> candles.low
+                    else -> candles.close
+                }
+                val sma = indicatorRepository.sma(sourceCandles, period)
+                val ema = indicatorRepository.ema(sourceCandles, period)
+                val wma = indicatorRepository.wma(sourceCandles, period)
+                val hma = indicatorRepository.hma(sourceCandles, period)
+                val rsi = indicatorRepository.rsi(sourceCandles, period)
+                val macd = indicatorRepository.macd(sourceCandles, shortPeriod, longPeriod, signalPeriod)
+                indicatorStateAsFlow.emit(
+                    IndicatorDataState(
+                        sma = String.format("%.2f", sma),
+                        ema = String.format("%.2f", ema),
+                        wma = String.format("%.2f", wma),
+                        hma = String.format("%.2f", hma),
+                        rsi = String.format("%.2f", rsi),
+                        macd = String.format("%.2f", macd)
+                    )
                 )
-            )
+            } catch (e: Exception) {
+                e.printStackTrace()
+            }
         }
     }
 
