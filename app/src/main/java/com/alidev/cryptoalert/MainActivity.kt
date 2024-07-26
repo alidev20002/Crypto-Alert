@@ -91,6 +91,14 @@ class MainActivity : ComponentActivity() {
                                             Toast.makeText(this, "When Service is running, you cannot modify conditions!", Toast.LENGTH_SHORT).show()
                                         }
                                     },
+                                    onRemoveAllConditionsClick = {
+                                        if (!CryptoAlertService.isServiceStarted) {
+                                            viewModel.removeAllConditions()
+                                            Toast.makeText(this, "Conditions removed successfully!", Toast.LENGTH_SHORT).show()
+                                        }else {
+                                            Toast.makeText(this, "When Service is running, you cannot modify conditions!", Toast.LENGTH_SHORT).show()
+                                        }
+                                    },
                                     onStartServiceClick = {
                                         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
                                             when (PackageManager.PERMISSION_GRANTED) {

@@ -30,6 +30,7 @@ fun MainScreen(
     isDarkMode: Boolean,
     onAddConditionClick: (CryptoCondition) -> Unit,
     onRemoveConditionClick: (CryptoCondition) -> Unit,
+    onRemoveAllConditionsClick: () -> Unit,
     onStartServiceClick: () -> Unit,
     onStopServiceClick: () -> Unit,
     onSaveClick: (Boolean, String) -> Unit,
@@ -79,7 +80,8 @@ fun MainScreen(
                         conditions = cryptoConditions,
                         onStartServiceClick = onStartServiceClick,
                         onStopServiceClick = onStopServiceClick,
-                        onRemoveConditionClick = onRemoveConditionClick
+                        onRemoveConditionClick = onRemoveConditionClick,
+                        onRemoveAllConditionsClick = onRemoveAllConditionsClick
                     )
                 }
                 3 -> {
@@ -123,6 +125,7 @@ private fun MainScreenPreview() {
         onStartServiceClick = {},
         onStopServiceClick = {},
         onRemoveConditionClick = {},
+        onRemoveAllConditionsClick = {},
         onSaveClick = { _, _ -> },
         onChangeThemeClick = {},
         onSelectCrypto = { _, _ -> }
