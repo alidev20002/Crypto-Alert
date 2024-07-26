@@ -102,6 +102,13 @@ class CryptoMarketViewModel @Inject constructor(
         }
     }
 
+    fun removeAllConditions() {
+        viewModelScope.launch {
+            cryptoConditions.clear()
+            conditionRepository.writeConditions(cryptoConditions.toList())
+        }
+    }
+
     fun saveDstCurrency(dstCurrency: String) {
         viewModelScope.launch {
             dstCurrencyRepository.writeDstCurrency(dstCurrency)
