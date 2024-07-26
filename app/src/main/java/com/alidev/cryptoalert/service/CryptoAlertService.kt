@@ -158,7 +158,7 @@ class CryptoAlertService : Service() {
                             stats["${cryptoCondition.crypto.shortName}-$destinationCurrency"]?.latest
 
                         val price = if (destinationCurrency == "rls") {
-                            String.format("%.0f", cryptoStat?.toFloat()?.div(10))
+                            cryptoStat?.substring(0, cryptoStat.length - 1)
                         } else{
                             cryptoStat
                         }
